@@ -30,9 +30,15 @@ public class ControleResource {
     }
 
     @GET
-    @Path("/sigla/{sigla}")
-    public ControleResponseDTO buscarPorSigla(String marca) { 
+    @Path("/{marca}")
+    public ControleResponseDTO buscarPorMarca(String marca) { 
         return service.findByMarca(marca);
+    }
+
+    @GET
+    @Path("/{id}")
+    public ControleResponseDTO buscarPorId(Long id) { 
+        return service.findById(id);
     }
 
     @POST
