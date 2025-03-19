@@ -1,4 +1,4 @@
-# faixas2025
+# TP1-A1
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
