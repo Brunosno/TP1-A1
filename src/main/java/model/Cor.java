@@ -11,15 +11,15 @@ public enum Cor {
     AZUL(4, "AZUL"), 
     ROXO(5, "ROXO");
 
-    private final int ID;
+    private final Integer ID;
     private final String NOME;
 
-    Cor(int id, String nome) {
+    Cor(Integer id, String nome) {
         this.ID = id;
         this.NOME = nome;
     }
 
-    public int getId() {
+    public Integer getId() {
         return ID;
     }
 

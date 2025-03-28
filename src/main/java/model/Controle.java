@@ -2,6 +2,8 @@ package model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Controle extends DefaultEntity {
@@ -9,8 +11,9 @@ public class Controle extends DefaultEntity {
     @Column(length = 60, nullable = false)
     private String nome;
 
-    @Column(length = 2, nullable = false)
-    private String marca;
+    @ManyToOne
+    @JoinColumn(name = "id_marca")
+    private Marca marca;
 
     private Cor cor;
 
@@ -22,11 +25,11 @@ public class Controle extends DefaultEntity {
         this.nome = nome;
     }
 
-    public String getMarca() {
+    public Marca getMarca() {
         return marca;
     }
 
-    public void setMarca(String marca) {
+    public void setMarca(Marca marca) {
         this.marca = marca;
     }
 
@@ -37,7 +40,4 @@ public class Controle extends DefaultEntity {
     public void setCor(Cor cor) {
         this.cor = cor;
     }
-
-    
-
 }

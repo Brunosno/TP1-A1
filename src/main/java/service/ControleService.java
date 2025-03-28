@@ -11,7 +11,8 @@ public interface ControleService {
     void update(long id, ControleDTO controle);
     void delete(long id);
     ControleResponseDTO findById(long id);
-    ControleResponseDTO findByMarca(String marca);
+    List<ControleResponseDTO> findByMarca(String marca);
+    List<ControleResponseDTO> findByCor(String cor);
     List<ControleResponseDTO> findAll();
     
 }

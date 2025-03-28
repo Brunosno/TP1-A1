@@ -10,9 +10,11 @@ import jakarta.persistence.PrePersist;
 
 @MappedSuperclass
 public class DefaultEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private LocalDateTime dataPedido;
 
     @PrePersist

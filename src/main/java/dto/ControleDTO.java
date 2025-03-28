@@ -1,8 +1,10 @@
 package dto;
 
+import model.Marca;
+
 public record ControleDTO(
     String nome,
-    String marca,
+    Marca marca,
     Integer idCor) {
     
 }

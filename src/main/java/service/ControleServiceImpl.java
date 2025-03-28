@@ -26,7 +26,6 @@ public class ControleServiceImpl implements ControleService {
        
         novoControle.setCor(Cor.valueOf(Controle.idCor()));
 
-        // realizando inclusao
         ControleRepository.persist(novoControle);
 
         return ControleResponseDTO.valueOf(novoControle);
@@ -54,8 +53,13 @@ public class ControleServiceImpl implements ControleService {
     }
 
     @Override
-    public ControleResponseDTO findByMarca(String marca) {
-        return ControleResponseDTO.valueOf(ControleRepository.findBySigla(marca));
+    public List<ControleResponseDTO> findByMarca(String marca) {
+        return ControleResponseDTO.listOf(ControleRepository.findByMarca(marca));
+    }
+
+    @Override
+    public List<ControleResponseDTO> findByCor(String cor) {
+        return ControleResponseDTO.listOf(ControleRepository.findByCor(cor));
     }
 
     @Override
