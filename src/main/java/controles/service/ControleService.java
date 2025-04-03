@@ -1,9 +1,9 @@
-package service;
+package controles.service;
 
 import java.util.List;
 
-import dto.ControleDTO;
-import dto.ControleResponseDTO;
+import controles.dto.ControleDTO;
+import controles.dto.ControleResponseDTO;
 
 public interface ControleService {
 

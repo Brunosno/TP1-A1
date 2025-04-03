@@ -1,6 +1,6 @@
-package model.converterjpa;
+package controles.model.converterjpa;
 
-import model.Cor;
+import controles.model.Cor;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

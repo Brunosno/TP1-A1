@@ -1,6 +1,6 @@
-package repository;
+package controles.repository;
 
-import model.Controle;
+import controles.model.Controle;
 import java.util.List;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;

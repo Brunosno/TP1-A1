@@ -1,6 +1,6 @@
-package dto;
+package controles.dto;
 
-import model.Marca;
+import controles.model.Marca;
 
 public record ControleDTO(
     String nome,

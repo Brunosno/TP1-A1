@@ -5,8 +5,7 @@
 -- insert into myentity (id, field) values(3, 'field-3');
 -- alter sequence myentity_seq restart with 4;
 
-insert into controle (nome, marca, cor) values ('Controle Xbox', 'Xbox', 1);
-insert into controle (nome, marca, cor) values ('Dualsense', 'PlayStation', 2);
-insert into controle (nome, marca, cor) values ('Dualshock', 'PlayStation', 5);
-insert into controle (nome, marca, cor) values ('G15', '8BitDo', 4);
-insert into controle (nome, marca, cor) values ('Race Far', 'Dell',3);
+
+insert into marca (nome) values ('Xbox'), ('PlayStation'), ('Switch');
+
+insert into controle(cor, id_marca, nome) values ('3','1','DualShock');

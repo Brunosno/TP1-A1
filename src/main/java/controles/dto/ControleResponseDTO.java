@@ -1,9 +1,9 @@
-package dto;
+package controles.dto;
 
-import model.Controle;
-import model.Cor;
+import controles.model.Controle;
+import controles.model.Cor;
 import java.util.List;
-import model.Marca;
+import controles.model.Marca;
 
 public record ControleResponseDTO(
     Long id,

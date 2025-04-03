@@ -1,4 +1,4 @@
-package model;
+package controles.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;

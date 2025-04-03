@@ -1,10 +1,10 @@
-package resource;
+package controles.resource;
 
 import java.util.List;
 
-import dto.ControleDTO;
-import dto.ControleResponseDTO;
-import service.ControleService;
+import controles.dto.ControleDTO;
+import controles.dto.ControleResponseDTO;
+import controles.service.ControleService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;

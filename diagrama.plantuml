@@ -1,0 +1,118 @@
+@startuml
+
+abstract class DefaultEntity {
+    - id: long
+
+    + getId(): long
+    + setId(long id)
+}
+
+enum Cor {
+    PRETO(1, "PRETO")
+    BRANCO(2, "BRANCO")
+    VERMELHO(3, "VERMELHO")
+    AZUL(4, "AZUL")
+    ROXO(5, "ROXO")
+
+    - ID: Integer
+    - NOME: String
+
+    + Cor(Integer id, String nome)
+    + getId(): Integer
+    + getNome(): String
+    + valueOf(Integer id): Cor
+}
+
+class Marca {
+    - id: long
+    - nome: String
+    + getNome(): String
+    + setNome(String nome)
+}
+
+Marca --|> DefaultEntity
+Marca "1" --> "0..*" Controle : possui
+
+class Controle {
+    - nome: String
+    - cor: Cor
+    + getNome(): String
+    + setNome(String nome)
+    + getMarca(): Marca
+    + setMarca(Marca marca)
+    + getCor(): Cor
+    + setCor(Cor cor)
+}
+
+Controle --|> DefaultEntity
+Controle "N" --> "1" Marca : pertence a
+Controle --> Cor : possui
+
+class ControleRepository {
+    + findByMarca(String marca): List<Controle>
+    + findByCor(String cor): List<Controle>
+}
+
+ControleRepository ..|> PanacheRepository
+ControleRepository --> Controle : gerencia
+
+class ControleDTO {
+    + String nome
+    + Marca marca
+    + Integer idCor
+}
+
+ControleDTO --> Marca
+
+class ControleResponseDTO {
+    + Long id
+    + String nome
+    + Marca marca
+    + Cor cor
+    + static ControleResponseDTO valueOf(Controle controle)
+    + static List<ControleResponseDTO> listOf(List<Controle> controles)
+}
+
+ControleResponseDTO --> Marca
+ControleResponseDTO --> Cor
+ControleResponseDTO ..> Controle : "Criação a partir de"
+
+interface ControleService {
+    + create(ControleDTO controle): ControleResponseDTO
+    + update(long id, ControleDTO controle)
+    + delete(long id)
+    + findById(long id): ControleResponseDTO
+    + findByMarca(String marca): List<ControleResponseDTO>
+    + findByCor(String cor): List<ControleResponseDTO>
+    + findAll(): List<ControleResponseDTO>
+}
+
+ControleService --> ControleDTO
+ControleService --> ControleResponseDTO
+
+class ControleServiceImpl {
+    - ControleRepository controleRepository
+    + create(ControleDTO controle): ControleResponseDTO
+    + update(long id, ControleDTO controle)
+    + delete(long id)
+    + findById(long id): ControleResponseDTO
+    + findByMarca(String marca): List<ControleResponseDTO>
+    + findByCor(String cor): List<ControleResponseDTO>
+    + findAll(): List<ControleResponseDTO>
+}
+
+ControleService <|.. ControleServiceImpl
+ControleServiceImpl --> ControleRepository
+ControleServiceImpl --> ControleDTO
+ControleServiceImpl --> ControleResponseDTO
+ControleServiceImpl --> Controle
+ControleServiceImpl --> Cor
+
+class CorConverter {
+    + convertToDatabaseColumn(Cor cor): Integer
+    + convertToEntityAttribute(Integer id): Cor
+}
+
+CorConverter --> Cor
+
+@enduml

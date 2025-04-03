@@ -1,12 +1,12 @@
-package service;
+package controles.service;
 
 import java.util.List;
 
-import dto.ControleDTO;
-import dto.ControleResponseDTO;
-import model.Controle;
-import model.Cor;
-import repository.ControleRepository;
+import controles.dto.ControleDTO;
+import controles.dto.ControleResponseDTO;
+import controles.model.Controle;
+import controles.model.Cor;
+import controles.repository.ControleRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
