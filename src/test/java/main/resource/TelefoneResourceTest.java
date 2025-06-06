@@ -24,7 +24,7 @@ public class TelefoneResourceTest {
     @Test
     void testBuscarTodos() {
         given()
-            .when().get("/Telefones")
+            .when().get("/telefones")
             .then()
                 .statusCode(200);
     }
@@ -36,7 +36,7 @@ public class TelefoneResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(dto)
-            .when().post("/Telefones")
+            .when().post("/telefones")
             .then()
                 .statusCode(201)
                 .body(
@@ -51,7 +51,7 @@ public class TelefoneResourceTest {
         Long id = telefoneService.create(dto).id();
 
         given()
-            .when().get("/Telefones/" + id)
+            .when().get("/telefones/" + id)
             .then()
                 .statusCode(200)
                 .body("numero", is("(63) 93456-7890"));
@@ -64,7 +64,7 @@ public class TelefoneResourceTest {
 
         given()
             .pathParam("numero", "(63) 90000-0001")
-            .when().get("/Telefones/Numero/{numero}")
+            .when().get("/telefones/numero/{numero}")
             .then()
                 .statusCode(200)
                 .body("numero", is("(63) 90000-0001"));
@@ -80,7 +80,7 @@ public class TelefoneResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(atualizado)
-            .when().put("/Telefones/" + id)
+            .when().put("/telefones/" + id)
             .then()
                 .statusCode(200);
 
@@ -94,7 +94,7 @@ public class TelefoneResourceTest {
         Long id = telefoneService.create(dto).id();
 
         given()
-            .when().delete("/Telefones/" + id)
+            .when().delete("/telefones/" + id)
             .then()
                 .statusCode(204);
 

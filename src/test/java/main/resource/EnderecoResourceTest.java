@@ -23,7 +23,7 @@ public class EnderecoResourceTest {
     @Test
     void testBuscarTodos() {
         given()
-            .when().get("/Enderecos")
+            .when().get("/enderecos")
             .then()
                 .statusCode(200);
     }
@@ -42,7 +42,7 @@ public class EnderecoResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(dto)
-            .when().post("/Enderecos")
+            .when().post("/enderecos")
             .then()
                 .statusCode(201)
                 .body("rua", is("Rua Teste"))
@@ -79,7 +79,7 @@ public class EnderecoResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(atualizado)
-            .when().put("/Enderecos/" + id)
+            .when().put("/enderecos/" + id)
             .then()
                 .statusCode(200);
 
@@ -104,7 +104,7 @@ public class EnderecoResourceTest {
         Long id = enderecoResponse.id();
 
         given()
-            .when().get("/Enderecos/" + id)
+            .when().get("/enderecos/" + id)
             .then()
                 .statusCode(200)
                 .body("rua", is("Rua Unica"))
@@ -129,7 +129,7 @@ public class EnderecoResourceTest {
         Long id = enderecoResponse.id();
 
         given()
-            .when().delete("/Enderecos/" + id)
+            .when().delete("/enderecos/" + id)
             .then()
                 .statusCode(204);
         try {

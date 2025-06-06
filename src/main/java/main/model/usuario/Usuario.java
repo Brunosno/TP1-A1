@@ -1,11 +1,16 @@
 package main.model.usuario;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import main.model.DefaultEntity;
 import main.model.cliente.Cliente;
+import main.model.pedido.Pedido;
 
 @Entity
 public class Usuario extends DefaultEntity{
@@ -21,6 +26,9 @@ public class Usuario extends DefaultEntity{
     @OneToOne
     @JoinColumn(name = "id_cliente", unique = true)
     private Cliente cliente;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Pedido> pedidos;
 
     public String getUsername() {
         return username;
@@ -54,5 +62,11 @@ public class Usuario extends DefaultEntity{
         this.cliente = cliente;
     }
 
-    
+    public List<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    public void setPedidos(List<Pedido> pedidos) {
+        this.pedidos = pedidos;
+    }
 }

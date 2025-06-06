@@ -34,14 +34,14 @@ public class PedidoResourceTest {
     @Test
     void testBuscarTodos() {
         given()
-            .when().get("/Pedidos")
+            .when().get("/pedidos")
             .then()
                 .statusCode(200);
     }
 
     @Test
     void testIncluir() {
-        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES);
+        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES, 3);
 
         int precoEsperado = IDS_CONTROLES.stream()
             .map(controleRepository::findById)
@@ -51,7 +51,7 @@ public class PedidoResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(dto)
-            .when().post("/Pedidos")
+            .when().post("/pedidos")
             .then()
                 .statusCode(201)
                 .body("id", notNullValue())
@@ -62,16 +62,16 @@ public class PedidoResourceTest {
 
     @Test
     void testAlterar() {
-        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES);
+        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES, 3);
         PedidoResponseDTO pedidoResponse = pedidoService.create(dto);
         Long id = pedidoResponse.id();
 
-        PedidoDTO atualizado = new PedidoDTO(ID_CLIENTE, List.of(1L));
+        PedidoDTO atualizado = new PedidoDTO(ID_CLIENTE, List.of(1L), 2);
 
         given()
             .contentType(ContentType.JSON)
             .body(atualizado)
-            .when().put("/Pedidos/" + id)
+            .when().put("/pedidos/" + id)
             .then()
                 .statusCode(200)
                 .body("id", is(id.intValue()))
@@ -80,12 +80,12 @@ public class PedidoResourceTest {
 
     @Test
     void testBuscarPorId() {
-        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES);
+        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES, 3);
         PedidoResponseDTO pedidoResponse = pedidoService.create(dto);
         Long id = pedidoResponse.id();
 
         given()
-            .when().get("/Pedidos/" + id)
+            .when().get("/pedidos/" + id)
             .then()
                 .statusCode(200)
                 .body("id", is(id.intValue()))
@@ -96,11 +96,11 @@ public class PedidoResourceTest {
     @Test
     void testBuscarPorCliente() {
 
-        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES);
+        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES, 3);
         pedidoService.create(dto);
 
         given()
-            .when().get("/Pedidos/Cliente/" + ID_CLIENTE)
+            .when().get("/pedidos/cliente/" + ID_CLIENTE)
             .then()
                 .statusCode(200)
                 .body("size()", is(1))
@@ -109,12 +109,12 @@ public class PedidoResourceTest {
 
     @Test
     void testApagar() {
-        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES);
+        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES, 3);
         PedidoResponseDTO pedidoResponse = pedidoService.create(dto);
         Long id = pedidoResponse.id();
 
         given()
-            .when().delete("/Pedidos/" + id)
+            .when().delete("/pedidos/" + id)
             .then()
                 .statusCode(204);
 

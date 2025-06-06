@@ -28,7 +28,7 @@ public class ControleResourceTest {
     @Test
     void testBuscarTodos() {
         given()
-            .when().get("/Controles")
+            .when().get("/controles")
             .then()
                 .statusCode(200);
     }
@@ -49,7 +49,7 @@ public class ControleResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(dto)
-            .when().post("/Controles")
+            .when().post("/controles")
             .then()
                 .statusCode(201)
                 .body(
@@ -91,7 +91,7 @@ public class ControleResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(atualizado)
-            .when().put("/Controles/" + id)
+            .when().put("/controles/" + id)
             .then()
                 .statusCode(204);
 
@@ -116,18 +116,19 @@ public class ControleResourceTest {
         Long id = controleService.create(dto).id();
 
         given()
-            .when().get("/Controles/" + id)
+            .when().get("/controles/" + id)
             .then()
                 .statusCode(200)
                 .body("nome", is("Controle Unico"));
     }
 
+    @Test
     void testBuscarPorIdInexistente() {
         Long idInexistente = 9999L;
 
         given()
             .pathParam("id", idInexistente)
-            .when().get("/Clientes/{id}")
+            .when().get("/clientes/{id}")
             .then()
                 .statusCode(404);
     }
@@ -150,7 +151,7 @@ public class ControleResourceTest {
 
         given()
             .pathParam("fabricante", "Sony")
-            .when().get("/Controles/Fabricante/{fabricante}")
+            .when().get("/controles/fabricante/{fabricante}")
             .then()
                 .statusCode(200);
     }
@@ -173,7 +174,7 @@ public class ControleResourceTest {
 
         given()
             .pathParam("cor", "PRETO")
-            .when().get("/Controles/Cor/{cor}")
+            .when().get("/controles/cor/{cor}")
             .then()
                 .statusCode(200);
     }
@@ -195,7 +196,7 @@ public class ControleResourceTest {
         Long id = controleService.create(dto).id();
 
         given()
-            .when().delete("/Controles/" + id)
+            .when().delete("/controles/" + id)
             .then()
                 .statusCode(204);
 

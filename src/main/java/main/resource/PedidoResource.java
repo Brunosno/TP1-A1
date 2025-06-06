@@ -11,7 +11,7 @@ import main.service.pedido.PedidoService;
 
 import java.util.List;
 
-@Path("/Pedidos")
+@Path("/pedidos")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class PedidoResource {
@@ -31,7 +31,7 @@ public class PedidoResource {
     }
 
     @GET
-    @Path("/Cliente/{idCliente}")
+    @Path("/cliente/{idCliente}")
     public List<PedidoResponseDTO> buscarPorCliente(@PathParam("idCliente") Long idCliente) {
         return pedidoService.findByClienteId(idCliente);
     }

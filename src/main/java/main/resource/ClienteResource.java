@@ -8,6 +8,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -16,7 +17,7 @@ import main.dto.clienteDTO.ClienteDTO;
 import main.dto.clienteDTO.ClienteResponseDTO;
 import main.service.cliente.ClienteService;
 
-@Path("Clientes")
+@Path("clientes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ClienteResource {
@@ -31,7 +32,7 @@ public class ClienteResource {
 
     @GET
     @Path("/{id}")
-    public Response buscarPorId(Long id) { 
+    public Response buscarPorId(@PathParam("id") Long id) { 
         ClienteResponseDTO cliente = service.findById(id);
         if (cliente != null) {
             return Response.ok(cliente).build();
@@ -41,7 +42,7 @@ public class ClienteResource {
 
     @GET
     @Path("/cpf/{cpf}")
-    public Response buscarPorCPF(String cpf) { 
+    public Response buscarPorCPF(@PathParam("cpf") String cpf) { 
         ClienteResponseDTO cliente = service.findByCPF(cpf);
         if (cliente != null) {
             return Response.ok(cliente).build();
@@ -57,7 +58,7 @@ public class ClienteResource {
 
     @PUT
     @Path("/{id}")
-    public Response alterar(Long id, ClienteDTO dto) {
+    public Response alterar(@PathParam("id") Long id, ClienteDTO dto) {
         service.update(id, dto);
         return Response.ok().build();
     }
@@ -65,7 +66,7 @@ public class ClienteResource {
     @DELETE
     @Path("/{id}")
     @Transactional
-    public Response apagar(Long id) {
+    public Response apagar(@PathParam("id") Long id) {
         service.delete(id);
         return Response.noContent().build();
     }

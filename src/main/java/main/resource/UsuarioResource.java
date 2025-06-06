@@ -22,7 +22,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import jakarta.annotation.security.RolesAllowed;
 
-@Path("Usuarios")
+@Path("usuarios")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UsuarioResource {
@@ -46,6 +46,7 @@ public class UsuarioResource {
 
     @GET
     @Path("/perfil")
+    @RolesAllowed({"Adm", "User"})
     public Response buscarUsuarioLogado() { 
 
         String username = jwt.getSubject();
@@ -57,6 +58,7 @@ public class UsuarioResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({"Adm"})
     public Response findById(@PathParam("id") Long id) {
         UsuarioResponseDTO usuario = usuarioService.findById(id);
         if (usuario == null) {
@@ -74,6 +76,7 @@ public class UsuarioResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({"Adm"})
     @Transactional
     public Response update(@PathParam("id") Long id, UsuarioDTO dto) {
         try {
@@ -86,6 +89,7 @@ public class UsuarioResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({"Adm"})
     @Transactional
     public Response delete(@PathParam("id") Long id) {
         usuarioService.delete(id);

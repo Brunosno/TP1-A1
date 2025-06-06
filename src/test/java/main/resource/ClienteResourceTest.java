@@ -30,7 +30,7 @@ public class ClienteResourceTest {
     @Test
     void testBuscarTodos() {
         given()
-            .when().get("/Clientes")
+            .when().get("/clientes")
             .then()
                 .statusCode(200);
     }
@@ -48,7 +48,7 @@ public class ClienteResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(dto)
-            .when().post("/Clientes")
+            .when().post("/clientes")
             .then()
                 .statusCode(201)
                 .body(
@@ -82,7 +82,7 @@ public class ClienteResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(atualizado)
-            .when().put("/Clientes/" + id)
+            .when().put("/clientes/" + id)
             .then()
                 .statusCode(200);
 
@@ -105,7 +105,7 @@ public class ClienteResourceTest {
 
         given()
             .pathParam("cpf", "111.222.333-44")
-            .when().get("/Clientes/cpf/{cpf}")
+            .when().get("/clientes/cpf/{cpf}")
             .then()
                 .statusCode(200)
                 .body("nome", is("Carlos Mendes"));
@@ -115,7 +115,7 @@ public class ClienteResourceTest {
     void testBuscarPorCPFInexistente() {
         given()
             .pathParam("cpf", "000.000.000-00")
-            .when().get("/Clientes/cpf/{cpf}")
+            .when().get("/clientes/cpf/{cpf}")
             .then()
                 .statusCode(404);
     }
@@ -134,7 +134,7 @@ public class ClienteResourceTest {
 
         given()
             .pathParam("id", id)
-            .when().get("/Clientes/{id}")
+            .when().get("/clientes/{id}")
             .then()
                 .statusCode(200)
                 .body("nome", is("Lucas Oliveira"))
@@ -148,7 +148,7 @@ public class ClienteResourceTest {
 
         given()
             .pathParam("id", idInexistente)
-            .when().get("/Clientes/{id}")
+            .when().get("/clientes/{id}")
             .then()
                 .statusCode(404);
     }
@@ -166,7 +166,7 @@ public class ClienteResourceTest {
         Long id = clienteService.create(dto).id();
 
         given()
-            .when().delete("/Clientes/" + id)
+            .when().delete("/clientes/" + id)
             .then()
                 .statusCode(204);
 

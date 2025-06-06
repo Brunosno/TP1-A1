@@ -9,11 +9,12 @@ import java.time.LocalDate;
 import main.dto.pedidoDTO.PedidoDTO;
 import main.dto.pedidoDTO.PedidoResponseDTO;
 import main.model.pedido.Pedido;
-import main.model.cliente.Cliente;
+import main.model.usuario.Usuario;
 import main.model.controle.Controle;
-import main.repository.ClienteRepository;
+import main.model.pagamento.TipoPagamento;
 import main.repository.ControleRepository;
 import main.repository.PedidoRepository;
+import main.repository.UsuarioRepository;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class PedidoServiceImpl implements PedidoService {
     PedidoRepository pedidoRepository;
 
     @Inject
-    ClienteRepository clienteRepository;
+    UsuarioRepository clienteRepository;
 
     @Inject
     ControleRepository controleRepository;
@@ -33,7 +34,7 @@ public class PedidoServiceImpl implements PedidoService {
     @Transactional
     public PedidoResponseDTO create(PedidoDTO pedidoDTO) {
 
-        Cliente cliente = clienteRepository.findById(pedidoDTO.idCliente());
+        Usuario cliente = clienteRepository.findById(pedidoDTO.idCliente());
         
         List<Controle> controles = pedidoDTO.idsControles().stream()
             .map(controleRepository::findById)
@@ -46,6 +47,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setControles(controles);
         pedido.setPreco(preco);
         pedido.setDataPedido(LocalDate.now());
+        pedido.setTipo_pagamento(TipoPagamento.valueOf(pedidoDTO.idPagamento()));
 
         pedidoRepository.persist(pedido);
 
@@ -60,7 +62,7 @@ public class PedidoServiceImpl implements PedidoService {
             throw new NotFoundException("Pedido não encontrado com ID: " + id);
         }
 
-        Cliente cliente = clienteRepository.findById(dto.idCliente());
+        Usuario cliente = clienteRepository.findById(dto.idCliente());
         List<Controle> controles = dto.idsControles().stream()
             .map(controleRepository::findById)
             .toList();
@@ -70,6 +72,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setCliente(cliente);
         pedido.setControles(controles);
         pedido.setPreco(preco);
+        pedido.setTipo_pagamento(TipoPagamento.valueOf(dto.idPagamento()));
 
         return PedidoResponseDTO.valueOf(pedido);
     }

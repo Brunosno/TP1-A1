@@ -2,32 +2,26 @@ package main.resource;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
 import main.dto.fabricanteDTO.FabricanteDTO;
 import main.dto.fabricanteDTO.FabricanteResponseDTO;
 import main.service.fabricante.FabricanteService;
 
-@Path("Fabricantes")
+@Path("fabricantes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class FabricanteResouce {
+public class FabricanteResource {
 
     @Inject
     FabricanteService service;
 
     @GET
     public Response buscarTodos() {
-        return Response.ok().entity(service.findAll()).build();
+        return Response.ok(service.findAll()).build();
     }
 
     @GET
@@ -60,7 +54,7 @@ public class FabricanteResouce {
     @Path("/{id}")
     public Response alterar(@PathParam("id") Long id, FabricanteDTO dto) {
         service.update(id, dto);
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
     @DELETE

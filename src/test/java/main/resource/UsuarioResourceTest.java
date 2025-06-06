@@ -8,17 +8,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.NotFoundException;
 import main.dto.clienteDTO.ClienteDTO;
 import main.dto.clienteDTO.ClienteResponseDTO;
 import main.dto.telefoneDTO.TelefoneDTO;
 import main.dto.telefoneDTO.TelefoneResponseDTO;
 import main.dto.usuarioDTO.UsuarioDTO;
-import main.dto.usuarioDTO.UsuarioResponseDTO;
 import main.model.usuario.Perfil;
 import main.service.cliente.ClienteService;
 import main.service.telefone.TelefoneService;
@@ -54,7 +51,7 @@ public class UsuarioResourceTest {
     @Test
     void testBuscarTodos() {
         given()
-            .when().get("/Usuarios")
+            .when().get("/usuarios")
             .then()
                 .statusCode(200);
     }
@@ -68,7 +65,7 @@ public class UsuarioResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(dto)
-            .when().post("/Usuarios")
+            .when().post("/usuarios")
             .then()
                 .statusCode(201)
                 .body(
@@ -78,10 +75,11 @@ public class UsuarioResourceTest {
     }
 
     @Test
-    void testAlterar(){
+    void testAlterar() {
         Long idCliente = criarCliente("Usuário Alterar", "987.654.321-01", "usuario2@email.com", criarTelefone("(63) 98444-1451"));
 
-        Long idUsuario = usuarioService.findByUsername("usuario_teste").id();
+        UsuarioDTO dtoOriginal = new UsuarioDTO("usuario_teste_alt", "senha123", Perfil.USER.getId(), idCliente);
+        Long idUsuario = usuarioService.create(dtoOriginal).id();
 
         UsuarioDTO atualizado = new UsuarioDTO("usuario_atualizado", "novaSenha", Perfil.ADM.getId(), idCliente);
 
@@ -89,18 +87,18 @@ public class UsuarioResourceTest {
             .contentType(ContentType.JSON)
             .body(atualizado)
             .pathParam("id", idUsuario)
-            .when().put("/Usuarios/{id}")
+            .when().put("/usuarios/{id}")
             .then()
                 .statusCode(204);
 
         given()
             .pathParam("id", idUsuario)
-            .when().get("/Usuarios/{id}")
+            .when().get("/usuarios/{id}")
             .then()
                 .statusCode(200)
                 .body(
                     "username", is("usuario_atualizado"),
-                    "perfil", is("ADM") // Verifique se o nome do perfil na resposta é esse.
+                    "perfil", is("ADM")
                 );
     }
 
@@ -113,12 +111,12 @@ public class UsuarioResourceTest {
 
             given()
                 .pathParam("id", id)
-                .when().delete("/Usuarios/{id}")
+                .when().delete("/usuarios/{id}")
                 .then()
                     .statusCode(204);
 
             given()
-                .when().get("/Usuarios/" + id)
+                .when().get("/usuarios/" + id)
                 .then()
                     .statusCode(404);
         } catch (Exception e) {
@@ -133,7 +131,7 @@ public class UsuarioResourceTest {
     void testBuscarPorIdInexistente() {
         given()
             .pathParam("id", 9999)
-            .when().get("/Usuarios/{id}")
+            .when().get("/usuarios/{id}")
             .then()
                 .statusCode(404);
     }

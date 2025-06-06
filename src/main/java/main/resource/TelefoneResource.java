@@ -16,7 +16,7 @@ import main.dto.telefoneDTO.TelefoneDTO;
 import main.dto.telefoneDTO.TelefoneResponseDTO;
 import main.service.telefone.TelefoneService;
 
-@Path("Telefones")
+@Path("telefones")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TelefoneResource {
@@ -40,7 +40,7 @@ public class TelefoneResource {
     }
 
     @GET
-    @Path("/Numero/{numero}")
+    @Path("/numero/{numero}")
     public Response buscarPorNumero(String numero) {
         TelefoneResponseDTO telefone = service.findByNumber(numero);
         if (telefone != null) {

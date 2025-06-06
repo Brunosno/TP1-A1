@@ -30,7 +30,7 @@ public class FabricanteResourceTest {
     @Test
     void testBuscarTodos() {
         given()
-            .when().get("/Fabricantes")
+            .when().get("/fabricantes")
             .then()
                 .statusCode(200);
     }
@@ -48,7 +48,7 @@ public class FabricanteResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(dto)
-            .when().post("/Fabricantes")
+            .when().post("/fabricantes")
             .then()
                 .statusCode(201)
                 .body(
@@ -82,9 +82,9 @@ public class FabricanteResourceTest {
         given()
             .contentType(ContentType.JSON)
             .body(atualizado)
-            .when().put("/Fabricantes/" + id)
+            .when().put("/fabricantes/" + id)
             .then()
-                .statusCode(200);
+                .statusCode(204);
 
         FabricanteResponseDTO response = fabricanteService.findById(id);
         assertThat(response.nome(), is("Fornecedor Atualizado"));
@@ -105,7 +105,7 @@ public class FabricanteResourceTest {
 
         given()
             .pathParam("cnpj", "22.333.444/0001-88")
-            .when().get("/Fabricantes/cnpj/{cnpj}")
+            .when().get("/fabricantes/cnpj/{cnpj}")
             .then()
                 .statusCode(200)
                 .body("nome", is("CNPJ Teste"));
@@ -124,11 +124,41 @@ public class FabricanteResourceTest {
         Long id = fabricanteService.create(dto).id();
 
         given()
-            .when().delete("/Fabricantes/" + id)
+            .when().delete("/fabricantes/" + id)
             .then()
                 .statusCode(204);
 
         FabricanteResponseDTO response = fabricanteService.findById(id);
         assertNull(response);
     }
+
+    @Test
+    void testBuscarPorId() {
+        FabricanteDTO dto = new FabricanteDTO(
+            "Fabricante Por ID",
+            "11.222.333/0001-44",
+            "id@fabricante.com",
+            ID_TELEFONE,
+            ENDERECOS_VAZIOS
+        );
+
+        Long id = fabricanteService.create(dto).id();
+
+        given()
+            .pathParam("id", id)
+            .when().get("/fabricantes/{id}")
+            .then()
+                .statusCode(200)
+                .body("nome", is("Fabricante Por ID"));
+    }
+
+    @Test
+    void testBuscarPorIdInexistente() {
+        given()
+            .pathParam("id", 9999L)
+            .when().get("/fabricantes/{id}")
+            .then()
+                .statusCode(404);
+    }
+
 }

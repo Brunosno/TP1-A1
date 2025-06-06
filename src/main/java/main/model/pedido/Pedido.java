@@ -9,8 +9,9 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import main.model.DefaultEntity;
-import main.model.cliente.Cliente;
 import main.model.controle.Controle;
+import main.model.pagamento.TipoPagamento;
+import main.model.usuario.Usuario;
 
 @Entity
 public class Pedido extends DefaultEntity{
@@ -19,7 +20,7 @@ public class Pedido extends DefaultEntity{
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
+    private Usuario cliente;
 
     @ManyToMany
     @JoinTable(
@@ -31,6 +32,16 @@ public class Pedido extends DefaultEntity{
 
     private Integer preco;
 
+    private TipoPagamento tipo_pagamento;
+
+    public TipoPagamento getTipo_pagamento() {
+        return tipo_pagamento;
+    }
+
+    public void setTipo_pagamento(TipoPagamento tipo_pagamento) {
+        this.tipo_pagamento = tipo_pagamento;
+    }
+
     public LocalDate getDataPedido() {
         return dataPedido;
     }
@@ -39,11 +50,11 @@ public class Pedido extends DefaultEntity{
         this.dataPedido = dataPedido;
     }
 
-    public Cliente getCliente() {
+    public Usuario getCliente() {
         return cliente;
     }
 
-    public void setCliente(Cliente cliente) {
+    public void setCliente(Usuario cliente) {
         this.cliente = cliente;
     }
 

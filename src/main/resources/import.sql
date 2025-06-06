@@ -25,4 +25,4 @@ values
     ('Controle Xbox One', 2, 2, 328, 'Wireless', 'Pilhas', false, false),
     ('Controle Pro Switch', 2, 3, 1450, 'USB-C', 'Bateria', true, true);
 
--- insert into usuario(username, senha, perfil, id_cliente) values ('BRUNO_SNO', '!Bruno1234', 1, 1);
+insert into usuario(username, senha, perfil, id_cliente) values ('BRUNO_SNO', '!Bruno1234', 1, 1);
