@@ -11,11 +11,12 @@ public record ControleResponseDTO(
     String nome,
     Fabricante fabricante,
     Cor cor,
-    Integer preco,
+    Double preco,
     String conexao,
     String alimentacao,
     boolean touchpad,
-    boolean gatilhosAdaptaveis) {
+    boolean gatilhosAdaptaveis,
+    Integer estoque) {
 
     public static ControleResponseDTO valueOf(Controle controle) {
         if (controle == null)
@@ -29,7 +30,8 @@ public record ControleResponseDTO(
             controle.getConexao(), 
             controle.getAlimentacao(), 
             controle.isTouchpad(), 
-            controle.isGatilhosAdaptaveis()
+            controle.isGatilhosAdaptaveis(),
+            controle.getEstoque()
         );
     }
 

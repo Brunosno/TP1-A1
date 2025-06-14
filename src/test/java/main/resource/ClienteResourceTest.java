@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import jakarta.inject.Inject;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import main.dto.clienteDTO.ClienteDTO;
 import main.dto.clienteDTO.ClienteResponseDTO;
@@ -28,6 +29,7 @@ public class ClienteResourceTest {
     static final List<Long> ENDERECOS_VAZIOS = List.of();
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testBuscarTodos() {
         given()
             .when().get("/clientes")
@@ -60,6 +62,7 @@ public class ClienteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testAlterar() {
         ClienteDTO dto = new ClienteDTO(
             "Maria Souza",
@@ -92,6 +95,7 @@ public class ClienteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testBuscarPorCPF() {
         ClienteDTO dto = new ClienteDTO(
             "Carlos Mendes",
@@ -112,6 +116,7 @@ public class ClienteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorCPFInexistente() {
         given()
             .pathParam("cpf", "000.000.000-00")
@@ -121,6 +126,7 @@ public class ClienteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorId() {
         ClienteDTO dto = new ClienteDTO(
             "Lucas Oliveira",
@@ -143,6 +149,7 @@ public class ClienteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorIdInexistente() {
         Long idInexistente = 9999L;
 
@@ -154,6 +161,7 @@ public class ClienteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testApagar() {
         ClienteDTO dto = new ClienteDTO(
             "Excluir Cliente",

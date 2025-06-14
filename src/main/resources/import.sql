@@ -6,7 +6,7 @@
 -- alter sequence myentity_seq restart with 4;
 
 insert into pessoa(email, nome) values ('bruno@gmail.com', 'Bruno');
-insert into pessoafisica(id, cpf) values (1, '078.603.371.18');
+insert into pessoafisica(id, cpf) values (1, '078.603.371-18');
 insert into cliente (id) values (1);
 
 insert into pessoa(email, nome) values ('sony@gmail.com', 'Sony');
@@ -19,10 +19,10 @@ values
     ('Rua B', '456', 'Bairro B', 'Cidade B', 'RJ', '77002-345'),
     ('Rua C', '789', 'Bairro C', 'Cidade C', 'MG', '77003-456');
 
-insert into controle (nome, id_fabricante, cor, preco, conexao, alimentacao, touchpad, gatilhosadaptaveis) 
+insert into controle (nome, id_fabricante, cor, preco, conexao, alimentacao, touchpad, gatilhosadaptaveis, estoque) 
 values
-    ('Controle DualShock 4', 2, 1, 349, 'Bluetooth', 'Bateria', true, false),
-    ('Controle Xbox One', 2, 2, 328, 'Wireless', 'Pilhas', false, false),
-    ('Controle Pro Switch', 2, 3, 1450, 'USB-C', 'Bateria', true, true);
+    ('Controle DualShock 4', 2, 1, 349, 'Bluetooth', 'Bateria', true, false, 50),
+    ('Controle Xbox One', 2, 2, 328, 'Wireless', 'Pilhas', false, false, 20),
+    ('Controle Pro Switch', 2, 3, 1450, 'USB-C', 'Bateria', true, true, 78);
 
-insert into usuario(username, senha, perfil, id_cliente) values ('BRUNO_SNO', '!Bruno1234', 1, 1);
+insert into usuario (username, senha, perfil, id_cliente) values ('BRUNO_SNO', '!Bruno1234', 1, 1);

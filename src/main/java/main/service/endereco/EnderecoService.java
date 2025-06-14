@@ -9,6 +9,7 @@ public interface EnderecoService {
     EnderecoResponseDTO create(EnderecoDTO dto);
     void update(Long id, EnderecoDTO dto);
     void delete(Long id);
+    EnderecoResponseDTO findByCEP(String cep);
     EnderecoResponseDTO findById(Long id);
     List<EnderecoResponseDTO> findAll();
 }

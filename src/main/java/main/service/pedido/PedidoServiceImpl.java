@@ -6,16 +6,22 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 
 import java.time.LocalDate;
+
+import main.dto.pedidoDTO.ItemPedidoDTO;
 import main.dto.pedidoDTO.PedidoDTO;
 import main.dto.pedidoDTO.PedidoResponseDTO;
+import main.model.pedido.ItemPedido;
 import main.model.pedido.Pedido;
 import main.model.usuario.Usuario;
+import main.model.cliente.Endereco;
 import main.model.controle.Controle;
 import main.model.pagamento.TipoPagamento;
 import main.repository.ControleRepository;
+import main.repository.EnderecoRepository;
 import main.repository.PedidoRepository;
 import main.repository.UsuarioRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
@@ -25,29 +31,46 @@ public class PedidoServiceImpl implements PedidoService {
     PedidoRepository pedidoRepository;
 
     @Inject
-    UsuarioRepository clienteRepository;
+    UsuarioRepository usuarioRepository;
 
     @Inject
     ControleRepository controleRepository;
 
+    @Inject
+    EnderecoRepository enderecoRepository;
+
     @Override
     @Transactional
-    public PedidoResponseDTO create(PedidoDTO pedidoDTO) {
+    public PedidoResponseDTO create(PedidoDTO pedidoDTO){
 
-        Usuario cliente = clienteRepository.findById(pedidoDTO.idCliente());
-        
-        List<Controle> controles = pedidoDTO.idsControles().stream()
-            .map(controleRepository::findById)
-            .toList();
+        Usuario usuario = usuarioRepository.findById(pedidoDTO.idUsuario());
 
-        Integer preco = controles.stream().mapToInt(Controle::getPreco).sum();
+        Endereco endereco = enderecoRepository.findById(pedidoDTO.idEndereco());
 
         Pedido pedido = new Pedido();
-        pedido.setCliente(cliente);
-        pedido.setControles(controles);
-        pedido.setPreco(preco);
+        pedido.setUsuario(usuario);
+        pedido.setTotal(pedidoDTO.total());
         pedido.setDataPedido(LocalDate.now());
         pedido.setTipo_pagamento(TipoPagamento.valueOf(pedidoDTO.idPagamento()));
+        pedido.setEndereco(endereco);
+
+        List<ItemPedido> listaItem = new ArrayList<ItemPedido>();
+        for (ItemPedidoDTO  itemDTO : pedidoDTO.itens()) {
+            Controle controle = controleRepository.findById(itemDTO.idProduto());
+
+            ItemPedido item = new ItemPedido();
+            item.setPedido(pedido);
+            item.setControle(controle);
+            item.setPreco(item.getControle().getPreco());
+            item.setQuantidade(itemDTO.quantidade());
+
+            listaItem.add(item);
+
+            controle.setEstoque(controle.getEstoque() - itemDTO.quantidade());
+
+        }
+
+        pedido.setItens(listaItem);
 
         pedidoRepository.persist(pedido);
 
@@ -62,17 +85,32 @@ public class PedidoServiceImpl implements PedidoService {
             throw new NotFoundException("Pedido não encontrado com ID: " + id);
         }
 
-        Usuario cliente = clienteRepository.findById(dto.idCliente());
-        List<Controle> controles = dto.idsControles().stream()
-            .map(controleRepository::findById)
-            .toList();
+        Usuario usuario = usuarioRepository.findById(dto.idUsuario());
+        Endereco endereco = enderecoRepository.findById(dto.idEndereco());
 
-        Integer preco = controles.stream().mapToInt(Controle::getPreco).sum();
-
-        pedido.setCliente(cliente);
-        pedido.setControles(controles);
-        pedido.setPreco(preco);
+        pedido.setUsuario(usuario);
+        pedido.setTotal(dto.total());
+        pedido.setDataPedido(LocalDate.now());
         pedido.setTipo_pagamento(TipoPagamento.valueOf(dto.idPagamento()));
+        pedido.setEndereco(endereco);
+
+        List<ItemPedido> listaItem = new ArrayList<ItemPedido>();
+        for (ItemPedidoDTO  itemDTO : dto.itens()) {
+            Controle controle = controleRepository.findById(itemDTO.idProduto());
+
+            ItemPedido item = new ItemPedido();
+            item.setPedido(pedido);
+            item.setControle(controle);
+            item.setPreco(item.getControle().getPreco());
+            item.setQuantidade(itemDTO.quantidade());
+
+            listaItem.add(item);
+
+            controle.setEstoque(controle.getEstoque() - itemDTO.quantidade());
+
+        }
+
+        pedido.setItens(listaItem);
 
         return PedidoResponseDTO.valueOf(pedido);
     }
@@ -94,8 +132,8 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public List<PedidoResponseDTO> findByClienteId(Long clienteId) {
-        List<Pedido> pedidos = pedidoRepository.findByClienteId(clienteId);
+    public List<PedidoResponseDTO> findByUsuario(Long usuario_id) {
+        List<Pedido> pedidos = pedidoRepository.findByUsuario(usuario_id);
         return pedidos.stream()
                 .map(PedidoResponseDTO::valueOf)
                 .toList();

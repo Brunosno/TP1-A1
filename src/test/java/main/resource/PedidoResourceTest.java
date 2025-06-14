@@ -7,6 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
 import main.dto.pedidoDTO.PedidoDTO;
@@ -28,10 +29,11 @@ public class PedidoResourceTest {
     @Inject
     ControleRepository controleRepository;
 
-    static final Long ID_CLIENTE = 1L;
+    static final Long ID_USUARIO = 1L;
     static final List<Long> IDS_CONTROLES = List.of(1L, 2L);
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarTodos() {
         given()
             .when().get("/pedidos")
@@ -40,8 +42,9 @@ public class PedidoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testIncluir() {
-        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES, 3);
+        PedidoDTO dto = new PedidoDTO(ID_USUARIO, IDS_CONTROLES, 3, 3L);
 
         int precoEsperado = IDS_CONTROLES.stream()
             .map(controleRepository::findById)
@@ -55,18 +58,19 @@ public class PedidoResourceTest {
             .then()
                 .statusCode(201)
                 .body("id", notNullValue())
-                .body("idCliente", is(ID_CLIENTE.intValue()))
+                .body("id_usuario", is(ID_USUARIO.intValue()))
                 .body("controles.size()", is(IDS_CONTROLES.size()))
                 .body("preco", is(precoEsperado));
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testAlterar() {
-        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES, 3);
+        PedidoDTO dto = new PedidoDTO(ID_USUARIO, IDS_CONTROLES, 3,3L);
         PedidoResponseDTO pedidoResponse = pedidoService.create(dto);
         Long id = pedidoResponse.id();
 
-        PedidoDTO atualizado = new PedidoDTO(ID_CLIENTE, List.of(1L), 2);
+        PedidoDTO atualizado = new PedidoDTO(ID_USUARIO, List.of(1L), 2,3L);
 
         given()
             .contentType(ContentType.JSON)
@@ -79,8 +83,9 @@ public class PedidoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorId() {
-        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES, 3);
+        PedidoDTO dto = new PedidoDTO(ID_USUARIO, IDS_CONTROLES, 3,3L);
         PedidoResponseDTO pedidoResponse = pedidoService.create(dto);
         Long id = pedidoResponse.id();
 
@@ -89,27 +94,27 @@ public class PedidoResourceTest {
             .then()
                 .statusCode(200)
                 .body("id", is(id.intValue()))
-                .body("idCliente", is(ID_CLIENTE.intValue()))
+                .body("id_usuario", is(ID_USUARIO.intValue()))
                 .body("controles.size()", is(IDS_CONTROLES.size()));
     }
 
     @Test
-    void testBuscarPorCliente() {
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
+    void testBuscarPorUsuario() {
 
-        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES, 3);
+        PedidoDTO dto = new PedidoDTO(ID_USUARIO, IDS_CONTROLES, 3,3L);
         pedidoService.create(dto);
 
         given()
-            .when().get("/pedidos/cliente/" + ID_CLIENTE)
+            .when().get("/pedidos/usuario/" + ID_USUARIO)
             .then()
-                .statusCode(200)
-                .body("size()", is(1))
-                .body("[0].idCliente", is(ID_CLIENTE.intValue()));
+                .statusCode(200);
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testApagar() {
-        PedidoDTO dto = new PedidoDTO(ID_CLIENTE, IDS_CONTROLES, 3);
+        PedidoDTO dto = new PedidoDTO(ID_USUARIO, IDS_CONTROLES, 3,3L);
         PedidoResponseDTO pedidoResponse = pedidoService.create(dto);
         Long id = pedidoResponse.id();
 

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import jakarta.inject.Inject;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import main.dto.enderecoDTO.EnderecoDTO;
 import main.dto.enderecoDTO.EnderecoResponseDTO;
@@ -21,6 +22,7 @@ public class EnderecoResourceTest {
     EnderecoService enderecoService;
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarTodos() {
         given()
             .when().get("/enderecos")
@@ -54,6 +56,7 @@ public class EnderecoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testAlterar() {
         EnderecoDTO dto = new EnderecoDTO(
             "Rua Teste Atualizada",
@@ -90,6 +93,7 @@ public class EnderecoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorId() {
         EnderecoDTO dto = new EnderecoDTO(
             "Rua Unica",
@@ -115,6 +119,33 @@ public class EnderecoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
+    void testBuscarPorCEP() {
+        EnderecoDTO dto = new EnderecoDTO(
+            "Rua Teste CEP",
+            "302",
+            "Bairro Teste CEP",
+            "Cidade Teste CEP",
+            "DF",
+            "77004-560"
+        );
+
+        EnderecoResponseDTO enderecoResponse = enderecoService.create(dto);
+        String cep = enderecoResponse.cep();
+
+        given()
+            .when().get("/enderecos/cep/" + cep)
+            .then()
+                .statusCode(200)
+                .body("rua", is("Rua Teste CEP"))
+                .body("bairro", is("Bairro Teste CEP"))
+                .body("cidade", is("Cidade Teste CEP"))
+                .body("estado", is("DF"))
+                .body("cep", is("77004-560"));
+    }
+
+    @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testApagar() {
         EnderecoDTO dto = new EnderecoDTO(
             "Rua para Exclusão",

@@ -19,7 +19,7 @@ public record ControleDTO(
 
     @NotNull(message = "O preço é obrigatório")
     @Positive(message = "O preço deve ser positivo")
-    Integer preco,
+    Double preco,
 
     @NotBlank(message = "O tipo de conexão é obrigatório")
     String conexao,
@@ -29,7 +29,9 @@ public record ControleDTO(
 
     boolean touchpad,
 
-    boolean gatilhosAdaptaveis) {
+    boolean gatilhosAdaptaveis,
+    
+    Integer quantidade) {
 
         public static ControleDTO valueOf(Controle controle) {
         if (controle == null) return null;
@@ -42,7 +44,8 @@ public record ControleDTO(
             controle.getConexao(),
             controle.getAlimentacao(),
             controle.isTouchpad(),
-            controle.isGatilhosAdaptaveis()
+            controle.isGatilhosAdaptaveis(),
+            controle.getEstoque()
         );
     }
 }

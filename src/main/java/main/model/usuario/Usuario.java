@@ -27,7 +27,7 @@ public class Usuario extends DefaultEntity{
     @JoinColumn(name = "id_cliente", unique = true)
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Pedido> pedidos;
 
     public String getUsername() {

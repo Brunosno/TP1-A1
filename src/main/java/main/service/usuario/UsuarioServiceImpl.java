@@ -49,7 +49,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         } catch (Exception e) {
             System.err.println("Erro ao criar usuário: " + e.getMessage());
             e.printStackTrace();
-            throw new Exception("Falha ao criar usuário.", e);
+            throw new Exception("Falha ao criar usuário.", e.getCause());
         }
     }
 

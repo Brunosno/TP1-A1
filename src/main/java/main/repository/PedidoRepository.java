@@ -9,8 +9,8 @@ import main.model.pedido.Pedido;
 @ApplicationScoped
 public class PedidoRepository implements PanacheRepository<Pedido> {
 
-    public List<Pedido> findByClienteId(Long clienteId) {
-        return find("cliente.id", clienteId).list();
+    public List<Pedido> findByUsuario(Long usuario_id) {
+        return find("usuario.id", usuario_id).list();
     }
     
 }

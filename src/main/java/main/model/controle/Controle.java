@@ -20,7 +20,7 @@ public class Controle extends DefaultEntity {
 
     private Cor cor;
 
-    private Integer preco;
+    private Double preco;
 
     private String conexao;
 
@@ -30,10 +30,12 @@ public class Controle extends DefaultEntity {
 
     private boolean gatilhosAdaptaveis;
 
-
     @ManyToOne
     @JoinColumn(name = "pedido_id")
     private Pedido pedido;
+
+    @Column(columnDefinition = "INT CHECK (estoque >= 0)")
+    private Integer estoque;
 
     public String getNome() {
         return nome;
@@ -59,11 +61,11 @@ public class Controle extends DefaultEntity {
         this.cor = cor;
     }
 
-    public Integer getPreco(){
+    public Double getPreco() {
         return preco;
     }
 
-    public void setPreco(Integer preco){
+    public void setPreco(Double preco) {
         this.preco = preco;
     }
 
@@ -105,5 +107,13 @@ public class Controle extends DefaultEntity {
     
     public void setPedido(Pedido pedido) {
         this.pedido = pedido;
+    }
+
+    public Integer getEstoque() {
+        return estoque;
+    }
+    
+    public void setEstoque(Integer estoque) {
+        this.estoque = estoque;
     }
 }

@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
 import main.dto.telefoneDTO.TelefoneDTO;
@@ -22,6 +23,7 @@ public class TelefoneResourceTest {
     TelefoneService telefoneService;
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testBuscarTodos() {
         given()
             .when().get("/telefones")
@@ -30,6 +32,7 @@ public class TelefoneResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testIncluir() {
         TelefoneDTO dto = new TelefoneDTO("(63) 91234-5678");
 
@@ -46,6 +49,7 @@ public class TelefoneResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testBuscarPorId() {
         TelefoneDTO dto = new TelefoneDTO("(63) 93456-7890");
         Long id = telefoneService.create(dto).id();
@@ -58,6 +62,7 @@ public class TelefoneResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testBuscarPorNumero() {
         TelefoneDTO dto = new TelefoneDTO("(63) 90000-0001");
         telefoneService.create(dto);
@@ -71,6 +76,7 @@ public class TelefoneResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testAlterar() {
         TelefoneDTO dto = new TelefoneDTO("(63) 98888-0000");
         Long id = telefoneService.create(dto).id();
@@ -89,6 +95,7 @@ public class TelefoneResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testApagar() {
         TelefoneDTO dto = new TelefoneDTO("(63) 96666-2222");
         Long id = telefoneService.create(dto).id();

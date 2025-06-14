@@ -69,6 +69,15 @@ public class EnderecoServiceImpl implements EnderecoService {
     }
 
     @Override
+    public EnderecoResponseDTO findByCEP(String cep){
+        Endereco endereco = enderecoRepository.findByCEP(cep);
+        if (endereco == null) {
+            throw new RuntimeException("Endereço não encontrado com cep: " + cep);
+        }
+        return EnderecoResponseDTO.valueOf(endereco);
+    }
+
+    @Override
     public List<EnderecoResponseDTO> findAll() {
         return enderecoRepository.listAll().stream()
             .map(EnderecoResponseDTO::valueOf)

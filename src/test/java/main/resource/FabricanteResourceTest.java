@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import jakarta.inject.Inject;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import main.dto.fabricanteDTO.FabricanteDTO;
 import main.dto.fabricanteDTO.FabricanteResponseDTO;
@@ -36,6 +37,7 @@ public class FabricanteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testIncluir() {
         FabricanteDTO dto = new FabricanteDTO(
             "Alimentos Tocantins", 
@@ -60,6 +62,7 @@ public class FabricanteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testAlterar() {
         FabricanteDTO dto = new FabricanteDTO(
             "Fornecedor Teste", 
@@ -92,6 +95,7 @@ public class FabricanteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorCNPJ() {
         FabricanteDTO dto = new FabricanteDTO(
             "CNPJ Teste", 
@@ -112,6 +116,7 @@ public class FabricanteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testApagar() {
         FabricanteDTO dto = new FabricanteDTO(
             "Excluir Fabricante", 
@@ -133,6 +138,7 @@ public class FabricanteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorId() {
         FabricanteDTO dto = new FabricanteDTO(
             "Fabricante Por ID",
@@ -153,6 +159,7 @@ public class FabricanteResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorIdInexistente() {
         given()
             .pathParam("id", 9999L)

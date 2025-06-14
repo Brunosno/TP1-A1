@@ -37,6 +37,7 @@ public class ControleServiceImpl implements ControleService {
         novoControle.setGatilhosAdaptaveis(Controle.gatilhosAdaptaveis());
         novoControle.setCor(Cor.valueOf(Controle.idCor()));
         novoControle.setPreco(Controle.preco());
+        novoControle.setEstoque(Controle.quantidade());
 
         ControleRepository.persist(novoControle);
 
@@ -57,6 +58,7 @@ public class ControleServiceImpl implements ControleService {
         edicaoControle.setGatilhosAdaptaveis(Controle.gatilhosAdaptaveis());
         edicaoControle.setCor(Cor.valueOf(Controle.idCor()));
         edicaoControle.setPreco(Controle.preco());
+        edicaoControle.setEstoque(Controle.quantidade());
     }
 
     @Override

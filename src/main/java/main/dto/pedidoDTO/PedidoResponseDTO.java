@@ -3,7 +3,7 @@ package main.dto.pedidoDTO;
 import java.time.LocalDate;
 import java.util.List;
 
-import main.dto.controleDTO.ControleDTO;
+import main.model.cliente.Endereco;
 import main.model.pagamento.TipoPagamento;
 import main.model.pedido.Pedido;
 
@@ -11,31 +11,28 @@ public record PedidoResponseDTO(
     Long id,
     String usuario,
     Long id_usuario,
-    List<ControleDTO> controles,
-    Integer preco,
+    List<ItemPedidoResponseDTO> lista,
+    Double total,
     LocalDate data,
-    TipoPagamento pagamento
-    
+    TipoPagamento pagamento,
+    Endereco endereco
 ) {
     public static PedidoResponseDTO valueOf(Pedido pedido) {
         if (pedido == null)
             return null;
 
-        String cliente = pedido.getCliente() != null ? pedido.getCliente().getUsername() : null;
-        Long id_cliente = pedido.getCliente() != null ? pedido.getCliente().getId() : null;
-
-        List<ControleDTO> controlesInfo = pedido.getControles() != null
-            ? pedido.getControles().stream().map(ControleDTO::valueOf).toList()
-            : List.of();
+        String usuario = pedido.getUsuario() != null ? pedido.getUsuario().getUsername() : null;
+        Long id_usuario = pedido.getUsuario() != null ? pedido.getUsuario().getId() : null;
 
         return new PedidoResponseDTO(
             pedido.getId(),
-            cliente,
-            id_cliente,
-            controlesInfo,
-            pedido.getPreco(),
+            usuario,
+            id_usuario,
+            pedido.getItens().stream().map(i -> ItemPedidoResponseDTO.valueOf(i)).toList(),
+            pedido.getTotal(),
             pedido.getDataPedido(),
-            pedido.getTipo_pagamento()
+            pedido.getTipo_pagamento(),
+            pedido.getEndereco()
         );
     }
 

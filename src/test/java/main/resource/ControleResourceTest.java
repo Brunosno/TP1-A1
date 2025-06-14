@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import jakarta.inject.Inject;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import main.dto.controleDTO.ControleDTO;
 import main.dto.controleDTO.ControleResponseDTO;
@@ -34,6 +35,7 @@ public class ControleResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testIncluir() {
         ControleDTO dto = new ControleDTO(
             "Controle DualSense",
@@ -43,7 +45,8 @@ public class ControleResourceTest {
             "Bluetooth",
             "Bateria",
             true,
-            true
+            true,
+            5
         );
 
         given()
@@ -63,6 +66,7 @@ public class ControleResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testAlterar() {
         ControleDTO dto = new ControleDTO(
             "Controle Teste",
@@ -72,7 +76,8 @@ public class ControleResourceTest {
             "USB",
             "Pilhas",
             false,
-            false
+            false,
+            12
         );
 
         Long id = controleService.create(dto).id();
@@ -85,7 +90,8 @@ public class ControleResourceTest {
             "Bluetooth",
             "Bateria",
             true,
-            true
+            true,
+            250
         );
 
         given()
@@ -101,6 +107,7 @@ public class ControleResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorId() {
         ControleDTO dto = new ControleDTO(
             "Controle Unico",
@@ -110,7 +117,8 @@ public class ControleResourceTest {
             "USB-C",
             "Bateria",
             true,
-            false
+            false,
+            80
         );
 
         Long id = controleService.create(dto).id();
@@ -123,6 +131,7 @@ public class ControleResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorIdInexistente() {
         Long idInexistente = 9999L;
 
@@ -144,7 +153,8 @@ public class ControleResourceTest {
             "Wireless",
             "Bateria",
             false,
-            false
+            false,
+            60
         );
 
         controleService.create(dto);
@@ -167,7 +177,8 @@ public class ControleResourceTest {
             "Bluetooth",
             "Bateria",
             true,
-            false
+            false,
+            30
         );
 
         controleService.create(dto);
@@ -181,6 +192,7 @@ public class ControleResourceTest {
 
 
     @Test
+    @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testApagar() {
         ControleDTO dto = new ControleDTO(
             "Controle para Exclusão",
@@ -190,7 +202,8 @@ public class ControleResourceTest {
             "USB",
             "Pilhas",
             false,
-            false
+            false,
+            90
         );
 
         Long id = controleService.create(dto).id();

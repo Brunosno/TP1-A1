@@ -3,13 +3,13 @@ package main.model.pedido;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import main.model.DefaultEntity;
-import main.model.controle.Controle;
+import main.model.cliente.Endereco;
 import main.model.pagamento.TipoPagamento;
 import main.model.usuario.Usuario;
 
@@ -19,24 +19,32 @@ public class Pedido extends DefaultEntity{
     private LocalDate dataPedido;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Usuario cliente;
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
-    @ManyToMany
-    @JoinTable(
-        name = "pedido_controle",
-        joinColumns = @JoinColumn(name = "pedido_id"),
-        inverseJoinColumns = @JoinColumn(name = "controle_id")
-    )
-    private List<Controle> controles;
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "pedido")
+    private List<ItemPedido> itens;
 
-    private Integer preco;
+    private Double total;
 
     private TipoPagamento tipo_pagamento;
+
+    @ManyToOne
+    @JoinColumn(name = "endereco_id", nullable = false)
+    private Endereco endereco;
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
 
     public TipoPagamento getTipo_pagamento() {
         return tipo_pagamento;
     }
+    
 
     public void setTipo_pagamento(TipoPagamento tipo_pagamento) {
         this.tipo_pagamento = tipo_pagamento;
@@ -47,32 +55,31 @@ public class Pedido extends DefaultEntity{
     }
 
     public void setDataPedido(LocalDate dataPedido) {
-        this.dataPedido = dataPedido;
+            this.dataPedido = dataPedido;
     }
 
-    public Usuario getCliente() {
-        return cliente;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setCliente(Usuario cliente) {
-        this.cliente = cliente;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
-    public List<Controle> getControles() {
-        return controles;
+    public List<ItemPedido> getItens() {
+        return itens;
     }
 
-    public void setControles(List<Controle> controles) {
-        this.controles = controles;
+    public void setItens(List<ItemPedido> itens) {
+        this.itens = itens;
     }
 
-    public Integer getPreco(){
-        return preco;
+    public Double getTotal(){
+        return total;
     }
 
-    public void setPreco(Integer preco){
-        this.preco = preco;
+    public void setTotal(Double total){
+        this.total = total;
     }
-    
 }
 
