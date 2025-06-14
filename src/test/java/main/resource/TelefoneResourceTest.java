@@ -25,87 +25,111 @@ public class TelefoneResourceTest {
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testBuscarTodos() {
-        given()
-            .when().get("/telefones")
-            .then()
-                .statusCode(200);
+        try {
+            given()
+                .when().get("/telefones")
+                .then()
+                    .statusCode(200);
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testBuscarTodos: " + e.getMessage(), e);
+        }
     }
 
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testIncluir() {
-        TelefoneDTO dto = new TelefoneDTO("(63) 91234-5678");
+        try {
+            TelefoneDTO dto = new TelefoneDTO("(63) 91234-5678");
 
-        given()
-            .contentType(ContentType.JSON)
-            .body(dto)
-            .when().post("/telefones")
-            .then()
-                .statusCode(201)
-                .body(
-                    "id", notNullValue(),
-                    "numero", is("(63) 91234-5678")
-                );
+            given()
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when().post("/telefones")
+                .then()
+                    .statusCode(201)
+                    .body(
+                        "id", notNullValue(),
+                        "numero", is("(63) 91234-5678")
+                    );
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testIncluir: " + e.getMessage(), e);
+        }
     }
 
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testBuscarPorId() {
-        TelefoneDTO dto = new TelefoneDTO("(63) 93456-7890");
-        Long id = telefoneService.create(dto).id();
+        try {
+            TelefoneDTO dto = new TelefoneDTO("(63) 93456-7890");
+            Long id = telefoneService.create(dto).id();
 
-        given()
-            .when().get("/telefones/" + id)
-            .then()
-                .statusCode(200)
-                .body("numero", is("(63) 93456-7890"));
+            given()
+                .when().get("/telefones/" + id)
+                .then()
+                    .statusCode(200)
+                    .body("numero", is("(63) 93456-7890"));
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testBuscarPorId: " + e.getMessage(), e);
+        }
     }
 
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testBuscarPorNumero() {
-        TelefoneDTO dto = new TelefoneDTO("(63) 90000-0001");
-        telefoneService.create(dto);
+        try {
+            TelefoneDTO dto = new TelefoneDTO("(63) 90000-0001");
+            telefoneService.create(dto);
 
-        given()
-            .pathParam("numero", "(63) 90000-0001")
-            .when().get("/telefones/numero/{numero}")
-            .then()
-                .statusCode(200)
-                .body("numero", is("(63) 90000-0001"));
+            given()
+                .pathParam("numero", "(63) 90000-0001")
+                .when().get("/telefones/numero/{numero}")
+                .then()
+                    .statusCode(200)
+                    .body("numero", is("(63) 90000-0001"));
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testBuscarPorNumero: " + e.getMessage(), e);
+        }
     }
 
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testAlterar() {
-        TelefoneDTO dto = new TelefoneDTO("(63) 98888-0000");
-        Long id = telefoneService.create(dto).id();
+        try {
+            TelefoneDTO dto = new TelefoneDTO("(63) 98888-0000");
+            Long id = telefoneService.create(dto).id();
 
-        TelefoneDTO atualizado = new TelefoneDTO("(63) 97777-1111");
+            TelefoneDTO atualizado = new TelefoneDTO("(63) 97777-1111");
 
-        given()
-            .contentType(ContentType.JSON)
-            .body(atualizado)
-            .when().put("/telefones/" + id)
-            .then()
-                .statusCode(200);
+            given()
+                .contentType(ContentType.JSON)
+                .body(atualizado)
+                .when().put("/telefones/" + id)
+                .then()
+                    .statusCode(200);
 
-        TelefoneResponseDTO response = telefoneService.findById(id);
-        assertThat(response.numero(), is("(63) 97777-1111"));
+            TelefoneResponseDTO response = telefoneService.findById(id);
+            assertThat(response.numero(), is("(63) 97777-1111"));
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testAlterar: " + e.getMessage(), e);
+        }
     }
 
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testApagar() {
-        TelefoneDTO dto = new TelefoneDTO("(63) 96666-2222");
-        Long id = telefoneService.create(dto).id();
+        try {
+            TelefoneDTO dto = new TelefoneDTO("(63) 96666-2222");
+            Long id = telefoneService.create(dto).id();
 
-        given()
-            .when().delete("/telefones/" + id)
-            .then()
-                .statusCode(204);
+            given()
+                .when().delete("/telefones/" + id)
+                .then()
+                    .statusCode(204);
 
-        TelefoneResponseDTO response = telefoneService.findById(id);
-        assertNull(response);
+            TelefoneResponseDTO response = telefoneService.findById(id);
+            assertNull(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testApagar: " + e.getMessage(), e);
+        }
     }
 }

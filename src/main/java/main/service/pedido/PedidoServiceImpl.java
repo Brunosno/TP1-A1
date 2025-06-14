@@ -47,9 +47,10 @@ public class PedidoServiceImpl implements PedidoService {
 
         Endereco endereco = enderecoRepository.findById(pedidoDTO.idEndereco());
 
+        double totalCalculado = 0;
+
         Pedido pedido = new Pedido();
         pedido.setUsuario(usuario);
-        pedido.setTotal(pedidoDTO.total());
         pedido.setDataPedido(LocalDate.now());
         pedido.setTipo_pagamento(TipoPagamento.valueOf(pedidoDTO.idPagamento()));
         pedido.setEndereco(endereco);
@@ -64,6 +65,9 @@ public class PedidoServiceImpl implements PedidoService {
             item.setPreco(item.getControle().getPreco());
             item.setQuantidade(itemDTO.quantidade());
 
+            double subtotal = item.getPreco() * item.getQuantidade();
+            totalCalculado += subtotal;
+
             listaItem.add(item);
 
             controle.setEstoque(controle.getEstoque() - itemDTO.quantidade());
@@ -71,6 +75,7 @@ public class PedidoServiceImpl implements PedidoService {
         }
 
         pedido.setItens(listaItem);
+        pedido.setTotal(totalCalculado);
 
         pedidoRepository.persist(pedido);
 
@@ -87,9 +92,9 @@ public class PedidoServiceImpl implements PedidoService {
 
         Usuario usuario = usuarioRepository.findById(dto.idUsuario());
         Endereco endereco = enderecoRepository.findById(dto.idEndereco());
+        double totalCalculado = 0;
 
         pedido.setUsuario(usuario);
-        pedido.setTotal(dto.total());
         pedido.setDataPedido(LocalDate.now());
         pedido.setTipo_pagamento(TipoPagamento.valueOf(dto.idPagamento()));
         pedido.setEndereco(endereco);
@@ -103,14 +108,16 @@ public class PedidoServiceImpl implements PedidoService {
             item.setControle(controle);
             item.setPreco(item.getControle().getPreco());
             item.setQuantidade(itemDTO.quantidade());
+            double subtotal = item.getPreco() * item.getQuantidade();
+            totalCalculado += subtotal;
 
             listaItem.add(item);
 
             controle.setEstoque(controle.getEstoque() - itemDTO.quantidade());
-
         }
 
         pedido.setItens(listaItem);
+        pedido.setTotal(totalCalculado);
 
         return PedidoResponseDTO.valueOf(pedido);
     }

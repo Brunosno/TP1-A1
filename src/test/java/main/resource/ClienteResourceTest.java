@@ -31,154 +31,186 @@ public class ClienteResourceTest {
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testBuscarTodos() {
-        given()
-            .when().get("/clientes")
-            .then()
-                .statusCode(200);
+        try {
+            given()
+                .when().get("/clientes")
+                .then()
+                    .statusCode(200);
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testBuscarTodos: " + e.getMessage(), e);
+        }
     }
 
     @Test
     void testIncluir() {
-        ClienteDTO dto = new ClienteDTO(
-            "João Silva",
-            "123.456.789-00",
-            "joao@email.com",
-            ID_TELEFONE,
-            ENDERECOS_VAZIOS
-        );
+        try {
+            ClienteDTO dto = new ClienteDTO(
+                "João Silva",
+                "123.456.789-00",
+                "joao@email.com",
+                ID_TELEFONE,
+                ENDERECOS_VAZIOS
+            );
 
-        given()
-            .contentType(ContentType.JSON)
-            .body(dto)
-            .when().post("/clientes")
-            .then()
-                .statusCode(201)
-                .body(
-                    "id", notNullValue(),
-                    "nome", is("João Silva"),
-                    "cpf", is("123.456.789-00"),
-                    "email", is("joao@email.com")
-                );
+            given()
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when().post("/clientes")
+                .then()
+                    .statusCode(201)
+                    .body(
+                        "id", notNullValue(),
+                        "nome", is("João Silva"),
+                        "cpf", is("123.456.789-00"),
+                        "email", is("joao@email.com")
+                    );
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testIncluir: " + e.getMessage(), e);
+        }
     }
 
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testAlterar() {
-        ClienteDTO dto = new ClienteDTO(
-            "Maria Souza",
-            "987.654.321-00",
-            "maria@email.com",
-            ID_TELEFONE,
-            ENDERECOS_VAZIOS
-        );
+        try {
+            ClienteDTO dto = new ClienteDTO(
+                "Maria Souza",
+                "987.654.321-00",
+                "maria@email.com",
+                ID_TELEFONE,
+                ENDERECOS_VAZIOS
+            );
 
-        Long id = clienteService.create(dto).id();
+            Long id = clienteService.create(dto).id();
 
-        ClienteDTO atualizado = new ClienteDTO(
-            "Maria Souza Atualizada",
-            "987.654.321-00",
-            "mariaatualizada@email.com",
-            ID_TELEFONE,
-            ENDERECOS_VAZIOS
-        );
+            ClienteDTO atualizado = new ClienteDTO(
+                "Maria Souza Atualizada",
+                "987.654.321-00",
+                "mariaatualizada@email.com",
+                ID_TELEFONE,
+                ENDERECOS_VAZIOS
+            );
 
-        given()
-            .contentType(ContentType.JSON)
-            .body(atualizado)
-            .when().put("/clientes/" + id)
-            .then()
-                .statusCode(200);
+            given()
+                .contentType(ContentType.JSON)
+                .body(atualizado)
+                .when().put("/clientes/" + id)
+                .then()
+                    .statusCode(200);
 
-        ClienteResponseDTO response = clienteService.findById(id);
-        assertThat(response.nome(), is("Maria Souza Atualizada"));
-        assertThat(response.email(), is("mariaatualizada@email.com"));
+            ClienteResponseDTO response = clienteService.findById(id);
+            assertThat(response.nome(), is("Maria Souza Atualizada"));
+            assertThat(response.email(), is("mariaatualizada@email.com"));
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testAlterar: " + e.getMessage(), e);
+        }
     }
 
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm"}, authorizationEnabled = true)
     void testBuscarPorCPF() {
-        ClienteDTO dto = new ClienteDTO(
-            "Carlos Mendes",
-            "111.222.333-44",
-            "carlos@email.com",
-            ID_TELEFONE,
-            ENDERECOS_VAZIOS
-        );
+        try {
+            ClienteDTO dto = new ClienteDTO(
+                "Carlos Mendes",
+                "111.222.333-44",
+                "carlos@email.com",
+                ID_TELEFONE,
+                ENDERECOS_VAZIOS
+            );
 
-        clienteService.create(dto);
+            clienteService.create(dto);
 
-        given()
-            .pathParam("cpf", "111.222.333-44")
-            .when().get("/clientes/cpf/{cpf}")
-            .then()
-                .statusCode(200)
-                .body("nome", is("Carlos Mendes"));
+            given()
+                .pathParam("cpf", "111.222.333-44")
+                .when().get("/clientes/cpf/{cpf}")
+                .then()
+                    .statusCode(200)
+                    .body("nome", is("Carlos Mendes"));
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testBuscarPorCPF: " + e.getMessage(), e);
+        }
     }
 
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorCPFInexistente() {
-        given()
-            .pathParam("cpf", "000.000.000-00")
-            .when().get("/clientes/cpf/{cpf}")
-            .then()
-                .statusCode(404);
+        try {
+            given()
+                .pathParam("cpf", "000.000.000-00")
+                .when().get("/clientes/cpf/{cpf}")
+                .then()
+                    .statusCode(404);
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testBuscarPorCPFInexistente: " + e.getMessage(), e);
+        }
     }
 
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorId() {
-        ClienteDTO dto = new ClienteDTO(
-            "Lucas Oliveira",
-            "222.333.444-55",
-            "lucas@email.com",
-            ID_TELEFONE,
-            ENDERECOS_VAZIOS
-        );
+        try {
+            ClienteDTO dto = new ClienteDTO(
+                "Lucas Oliveira",
+                "222.333.444-55",
+                "lucas@email.com",
+                ID_TELEFONE,
+                ENDERECOS_VAZIOS
+            );
 
-        Long id = clienteService.create(dto).id();
+            Long id = clienteService.create(dto).id();
 
-        given()
-            .pathParam("id", id)
-            .when().get("/clientes/{id}")
-            .then()
-                .statusCode(200)
-                .body("nome", is("Lucas Oliveira"))
-                .body("cpf", is("222.333.444-55"))
-                .body("email", is("lucas@email.com"));
+            given()
+                .pathParam("id", id)
+                .when().get("/clientes/{id}")
+                .then()
+                    .statusCode(200)
+                    .body("nome", is("Lucas Oliveira"))
+                    .body("cpf", is("222.333.444-55"))
+                    .body("email", is("lucas@email.com"));
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testBuscarPorId: " + e.getMessage(), e);
+        }
     }
 
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testBuscarPorIdInexistente() {
-        Long idInexistente = 9999L;
+        try {
+            Long idInexistente = 9999L;
 
-        given()
-            .pathParam("id", idInexistente)
-            .when().get("/clientes/{id}")
-            .then()
-                .statusCode(404);
+            given()
+                .pathParam("id", idInexistente)
+                .when().get("/clientes/{id}")
+                .then()
+                    .statusCode(404);
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testBuscarPorIdInexistente: " + e.getMessage(), e);
+        }
     }
 
     @Test
     @TestSecurity(user = "BRUNO_SNO", roles = {"Adm", "User"}, authorizationEnabled = true)
     void testApagar() {
-        ClienteDTO dto = new ClienteDTO(
-            "Excluir Cliente",
-            "555.666.777-88",
-            "excluir@cliente.com",
-            ID_TELEFONE,
-            ENDERECOS_VAZIOS
-        );
+        try {
+            ClienteDTO dto = new ClienteDTO(
+                "Excluir Cliente",
+                "555.666.777-88",
+                "excluir@cliente.com",
+                ID_TELEFONE,
+                ENDERECOS_VAZIOS
+            );
 
-        Long id = clienteService.create(dto).id();
+            Long id = clienteService.create(dto).id();
 
-        given()
-            .when().delete("/clientes/" + id)
-            .then()
-                .statusCode(204);
+            given()
+                .when().delete("/clientes/" + id)
+                .then()
+                    .statusCode(204);
 
-        ClienteResponseDTO response = clienteService.findById(id);
-        assertNull(response);
+            ClienteResponseDTO response = clienteService.findById(id);
+            assertNull(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Falha no teste testApagar: " + e.getMessage(), e);
+        }
     }
 }

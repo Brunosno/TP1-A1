@@ -26,3 +26,19 @@ values
     ('Controle Pro Switch', 2, 3, 1450, 'USB-C', 'Bateria', true, true, 78);
 
 insert into usuario (username, senha, perfil, id_cliente) values ('BRUNO_SNO', '!Bruno1234', 1, 1);
+
+INSERT INTO pedido (usuario_id, tipo_pagamento, endereco_id)
+VALUES (1, 1, 2);
+
+INSERT INTO pedido (usuario_id, tipo_pagamento, endereco_id)
+VALUES (1, 2, 3);
+
+INSERT INTO itempedido (quantidade, id_controle, id_pedido)
+VALUES 
+(2, 1, 1),
+(1, 2, 1);
+
+INSERT INTO itempedido (quantidade, id_controle, id_pedido)
+VALUES 
+(4, 3, 2),
+(5, 3, 2);
