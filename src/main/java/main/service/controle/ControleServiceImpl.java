@@ -7,11 +7,13 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import main.model.controle.Cor;
 import main.model.controle.Fabricante;
+import main.model.controle.Plataforma;
 import main.dto.controleDTO.ControleDTO;
 import main.dto.controleDTO.ControleResponseDTO;
 import main.model.controle.Controle;
 import main.repository.ControleRepository;
 import main.repository.FabricanteRepository;
+import main.repository.PlataformaRepository;
 
 @ApplicationScoped
 public class ControleServiceImpl implements ControleService {
@@ -21,6 +23,9 @@ public class ControleServiceImpl implements ControleService {
 
     @Inject
     FabricanteRepository fabricanteRepository;
+
+    @Inject
+    PlataformaRepository plataformaRepository;
 
     @Override
     @Transactional
@@ -38,6 +43,13 @@ public class ControleServiceImpl implements ControleService {
         novoControle.setCor(Cor.valueOf(Controle.idCor()));
         novoControle.setPreco(Controle.preco());
         novoControle.setEstoque(Controle.quantidade());
+
+        List<Plataforma> plataformas = Controle.idsPlataformas()
+            .stream()
+            .map(id -> plataformaRepository.findById(id))
+            .toList();
+
+        novoControle.setPlataformas(plataformas);
 
         ControleRepository.persist(novoControle);
 
@@ -59,6 +71,13 @@ public class ControleServiceImpl implements ControleService {
         edicaoControle.setCor(Cor.valueOf(Controle.idCor()));
         edicaoControle.setPreco(Controle.preco());
         edicaoControle.setEstoque(Controle.quantidade());
+
+        List<Plataforma> plataformas = Controle.idsPlataformas()
+            .stream()
+            .map(idPlataforma -> plataformaRepository.findById(idPlataforma))
+            .toList();
+            
+        edicaoControle.setPlataformas(plataformas);
     }
 
     @Override
@@ -84,7 +103,7 @@ public class ControleServiceImpl implements ControleService {
 
     @Override
     public List<ControleResponseDTO> findAll() {
-        return ControleRepository.findAll().stream().map(c -> ControleResponseDTO.valueOf(c)).toList();
+        return ControleRepository.findAll().list().stream().map(c -> ControleResponseDTO.valueOf(c)).toList();
     }
     
 }

@@ -1,9 +1,13 @@
 package main.model.controle;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import main.model.DefaultEntity;
 import main.model.pedido.Pedido;
@@ -36,6 +40,22 @@ public class Controle extends DefaultEntity {
 
     @Column(columnDefinition = "INT CHECK (estoque >= 0)")
     private Integer estoque;
+
+    @ManyToMany
+    @JoinTable(
+        name = "controle_plataforma",
+        joinColumns = @JoinColumn(name = "controle_id"),
+        inverseJoinColumns = @JoinColumn(name = "plataforma_id")
+    )
+    private List<Plataforma> plataformas;
+
+    public List<Plataforma> getPlataformas() {
+        return plataformas;
+    }
+
+    public void setPlataformas(List<Plataforma> plataformas) {
+        this.plataformas = plataformas;
+    }
 
     public String getNome() {
         return nome;

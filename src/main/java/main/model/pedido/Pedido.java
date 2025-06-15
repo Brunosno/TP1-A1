@@ -22,7 +22,7 @@ public class Pedido extends DefaultEntity{
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "pedido")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedido")
     private List<ItemPedido> itens;
 
     private Double total;

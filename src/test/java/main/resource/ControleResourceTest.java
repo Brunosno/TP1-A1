@@ -7,6 +7,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import jakarta.inject.Inject;
@@ -26,6 +28,7 @@ public class ControleResourceTest {
 
     static final Long ID_FABRICANTE = 2L;
     static final Integer ID_COR = 4;
+    static final List<Long> IDS_PLATAFORMAS = List.of(1L, 2L, 3L);
 
     @Test
     void testBuscarTodos() {
@@ -46,6 +49,7 @@ public class ControleResourceTest {
             ControleDTO dto = new ControleDTO(
                 "Controle DualSense",
                 ID_FABRICANTE,
+                IDS_PLATAFORMAS,
                 ID_COR,
                 450D,
                 "Bluetooth",
@@ -81,6 +85,7 @@ public class ControleResourceTest {
             ControleDTO dto = new ControleDTO(
                 "Controle Teste",
                 ID_FABRICANTE,
+                IDS_PLATAFORMAS,
                 ID_COR,
                 300D,
                 "USB",
@@ -95,6 +100,7 @@ public class ControleResourceTest {
             ControleDTO atualizado = new ControleDTO(
                 "Controle Atualizado",
                 ID_FABRICANTE,
+                IDS_PLATAFORMAS,
                 ID_COR,
                 500D,
                 "Bluetooth",
@@ -126,6 +132,7 @@ public class ControleResourceTest {
             ControleDTO dto = new ControleDTO(
                 "Controle Unico",
                 ID_FABRICANTE,
+                IDS_PLATAFORMAS,
                 ID_COR,
                 330D,
                 "USB-C",
@@ -169,6 +176,7 @@ public class ControleResourceTest {
             ControleDTO dto = new ControleDTO(
                 "Controle Marca Teste",
                 ID_FABRICANTE,
+                IDS_PLATAFORMAS,
                 ID_COR,
                 300D,
                 "Wireless",
@@ -196,6 +204,7 @@ public class ControleResourceTest {
             ControleDTO dto = new ControleDTO(
                 "Controle Preto",
                 ID_FABRICANTE,
+                IDS_PLATAFORMAS,
                 ID_COR,
                 300D,
                 "Bluetooth",
@@ -224,6 +233,7 @@ public class ControleResourceTest {
             ControleDTO dto = new ControleDTO(
                 "Controle para Exclusão",
                 ID_FABRICANTE,
+                IDS_PLATAFORMAS,
                 ID_COR,
                 300D,
                 "USB",

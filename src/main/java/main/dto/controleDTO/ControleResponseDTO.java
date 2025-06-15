@@ -2,6 +2,7 @@ package main.dto.controleDTO;
 
 import java.util.List;
 
+import main.dto.plataformaDTO.PlataformaResponseDTO;
 import main.model.controle.Controle;
 import main.model.controle.Cor;
 import main.model.controle.Fabricante;
@@ -10,6 +11,7 @@ public record ControleResponseDTO(
     Long id,
     String nome,
     Fabricante fabricante,
+    List<PlataformaResponseDTO> plataformas,
     Cor cor,
     Double preco,
     String conexao,
@@ -21,10 +23,14 @@ public record ControleResponseDTO(
     public static ControleResponseDTO valueOf(Controle controle) {
         if (controle == null)
             return null;
+
         return new ControleResponseDTO(
             controle.getId(), 
             controle.getNome(), 
-            controle.getFabricante(), 
+            controle.getFabricante(),
+            controle.getPlataformas() != null
+            ? controle.getPlataformas().stream().map(PlataformaResponseDTO::valueOf).toList()
+            : null,
             controle.getCor(), 
             controle.getPreco(),
             controle.getConexao(), 

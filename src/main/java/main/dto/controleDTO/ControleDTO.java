@@ -1,5 +1,7 @@
 package main.dto.controleDTO;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -12,6 +14,8 @@ public record ControleDTO(
     @NotNull(message = "O ID do fabricante é obrigatório")
     @Positive(message = "O ID do fabricante deve ser positivo")
     Long idFabricante,
+
+    List<Long> idsPlataformas,
 
     @NotNull(message = "O ID da cor é obrigatório")
     @Positive(message = "O ID da cor deve ser positivo")
@@ -39,6 +43,7 @@ public record ControleDTO(
         return new ControleDTO(
             controle.getNome(),
             controle.getFabricante() != null ? controle.getFabricante().getId() : null,
+            controle.getPlataformas() != null ? controle.getPlataformas().stream().map(p -> p.getId()).toList() : null,
             controle.getCor() != null ? controle.getCor().getId() : null,
             controle.getPreco(),
             controle.getConexao(),

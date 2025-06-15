@@ -13,17 +13,26 @@ insert into pessoa(email, nome) values ('sony@gmail.com', 'Sony');
 insert into pessoajuridica(id, cnpj) values (2, '07.354.235/1845-03');
 insert into fabricante (id) values (2);
 
-insert into endereco (rua, numero, bairro, cidade, estado, cep)
+insert into endereco (pessoa_id, rua, numero, bairro, cidade, estado, cep)
 values 
-    ('Rua A', '123', 'Bairro A', 'Cidade A', 'SP', '77001-234'),
-    ('Rua B', '456', 'Bairro B', 'Cidade B', 'RJ', '77002-345'),
-    ('Rua C', '789', 'Bairro C', 'Cidade C', 'MG', '77003-456');
+    (1, 'Rua A', '123', 'Bairro A', 'Cidade A', 'SP', '77001-234'),
+    (2, 'Rua B', '456', 'Bairro B', 'Cidade B', 'RJ', '77002-345'),
+    (1, 'Rua C', '789', 'Bairro C', 'Cidade C', 'MG', '77003-456');
+
+
+insert into plataforma (id, nome) values (1, 'PC'), (2, 'PlayStation 5'), (3, 'Xbox Series X');
 
 insert into controle (nome, id_fabricante, cor, preco, conexao, alimentacao, touchpad, gatilhosadaptaveis, estoque) 
 values
     ('Controle DualShock 4', 2, 1, 349, 'Bluetooth', 'Bateria', true, false, 50),
     ('Controle Xbox One', 2, 2, 328, 'Wireless', 'Pilhas', false, false, 20),
     ('Controle Pro Switch', 2, 3, 1450, 'USB-C', 'Bateria', true, true, 78);
+
+insert into controle_plataforma (controle_id, plataforma_id) values
+(1, 2),
+(2, 3),
+(3, 1),
+(3, 2);
 
 insert into usuario (username, senha, perfil, id_cliente) values ('BRUNO_SNO', '!Bruno1234', 1, 1);
 
@@ -40,5 +49,5 @@ VALUES
 
 INSERT INTO itempedido (quantidade, id_controle, id_pedido)
 VALUES 
-(4, 3, 2),
+(4, 2, 2),
 (5, 3, 2);
