@@ -13,6 +13,14 @@ insert into pessoa(email, nome) values ('sony@gmail.com', 'Sony');
 insert into pessoajuridica(id, cnpj) values (2, '07.354.235/1845-03');
 insert into fabricante (id) values (2);
 
+insert into pessoa(email, nome) values ('microsoft@gmail.com', 'Microsoft');
+insert into pessoajuridica(id, cnpj) values (3, '07.354.384/1845-03');
+insert into fabricante (id) values (3);
+
+insert into pessoa(email, nome) values ('nintendo@gmail.com', 'Nintendo');
+insert into pessoajuridica(id, cnpj) values (4, '07.018.235/1845-03');
+insert into fabricante (id) values (4);
+
 insert into endereco (pessoa_id, rua, numero, bairro, cidade, estado, cep)
 values 
     (1, 'Rua A', '123', 'Bairro A', 'Cidade A', 'SP', '77001-234'),
@@ -25,8 +33,8 @@ insert into plataforma (id, nome) values (1, 'PC'), (2, 'PlayStation 5'), (3, 'X
 insert into controle (nome, id_fabricante, cor, preco, conexao, alimentacao, touchpad, gatilhosadaptaveis, estoque) 
 values
     ('Controle DualShock 4', 2, 1, 349, 'Bluetooth', 'Bateria', true, false, 50),
-    ('Controle Xbox One', 2, 2, 328, 'Wireless', 'Pilhas', false, false, 20),
-    ('Controle Pro Switch', 2, 3, 1450, 'USB-C', 'Bateria', true, true, 78);
+    ('Controle Xbox One', 3, 2, 328, 'Wireless', 'Pilhas', false, false, 20),
+    ('Controle Pro Switch', 4, 3, 1450, 'USB-C', 'Bateria', true, true, 78);
 
 insert into controle_plataforma (controle_id, plataforma_id) values
 (1, 2),
