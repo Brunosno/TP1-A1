@@ -25,16 +25,23 @@ public class ControleResource {
     ControleService service;
 
     @GET
-    public Response buscarTodos() { 
+    public Response buscarTodos(
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+    ) { 
         LOG.info("Requisição para buscar todos os controles.");
-        return Response.ok(service.findAll()).build();
+        return Response.ok(service.findAll(page, pageSize)).build();
     }
 
     @GET
     @Path("/fabricante/{fabricante}")
-    public Response buscarPorMarca(@PathParam("fabricante") String fabricante) { 
+    public Response buscarPorFabricante(
+        @PathParam("fabricante") String fabricante,
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+        ) { 
         LOG.infof("Buscando controles pelo fabricante: %s", fabricante);
-        return Response.ok(service.findByFabricante(fabricante)).build();
+        return Response.ok(service.findByFabricante(fabricante, page, pageSize)).build();
     }
 
     @GET
@@ -58,7 +65,7 @@ public class ControleResource {
     }
 
     @POST
-    @RolesAllowed({"Adm", "User"})
+    //@RolesAllowed("Adm")
     public Response incluir(ControleDTO dto) {
         LOG.infof("Incluindo novo controle: Modelo=%s", dto.nome());
         ControleResponseDTO novo = service.create(dto);
@@ -68,7 +75,7 @@ public class ControleResource {
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed({"Adm", "User"})
+    //@RolesAllowed({"Adm", "User"})
     public Response alterar(@PathParam("id") Long id, ControleDTO dto) {
         LOG.infof("Atualizando controle com ID: %d", id);
         service.update(id, dto);
@@ -78,7 +85,7 @@ public class ControleResource {
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed({"Adm", "User"})
+    //@RolesAllowed({"Adm", "User"})
     @Transactional
     public Response apagar(@PathParam("id") Long id) {
         LOG.infof("Apagando controle com ID: %d", id);

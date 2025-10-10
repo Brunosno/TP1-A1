@@ -5,6 +5,8 @@ import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.QueryParam;
 import main.model.controle.Cor;
 import main.model.controle.Fabricante;
 import main.model.controle.Plataforma;
@@ -83,7 +85,11 @@ public class ControleServiceImpl implements ControleService {
     @Override
     @Transactional
     public void delete(long id) {
-        ControleRepository.deleteById(id);
+        try {
+            ControleRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new Error("Erro ao apagar controle " + id, e);
+        }
     }
 
     @Override
@@ -92,8 +98,8 @@ public class ControleServiceImpl implements ControleService {
     }
 
     @Override
-    public List<ControleResponseDTO> findByFabricante(String fabricante) {
-        return ControleResponseDTO.listOf(ControleRepository.findByFabricante(fabricante));
+    public List<ControleResponseDTO> findByFabricante(String fabricante, int page, int pageSize) {
+        return ControleResponseDTO.listOf(ControleRepository.findByFabricante(fabricante).page(page, pageSize).list());
     }
 
     @Override
@@ -102,8 +108,8 @@ public class ControleServiceImpl implements ControleService {
     }
 
     @Override
-    public List<ControleResponseDTO> findAll() {
-        return ControleRepository.findAll().list().stream().map(c -> ControleResponseDTO.valueOf(c)).toList();
+    public List<ControleResponseDTO> findAll(int page, int pageSize) {
+        return ControleRepository.findAllPaginatiom().page(page, pageSize).list().stream().map(c -> ControleResponseDTO.valueOf(c)).toList();
     }
     
 }

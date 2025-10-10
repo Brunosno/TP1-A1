@@ -29,7 +29,7 @@ public abstract class Pessoa extends DefaultEntity {
     private Telefone telefone;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "pessoa_id") 
+    @JoinColumn(name = "pessoa_id", nullable = true) 
     private List<Endereco> enderecos;
 
     public String getNome() {

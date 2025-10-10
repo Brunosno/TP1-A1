@@ -1,0 +1,139 @@
+@startuml
+
+left to right direction
+
+class Pessoa {
+  - nome: String
+  - email: String 
+}
+
+class PessoaFisica {
+  - String cpf
+}
+
+class PessoaJuridica {
+  - String cnpj
+}
+
+class Cliente {}
+
+class Endereco {
+  - String rua
+  - String numero
+  - String bairro
+  - String cidade
+  - String estado
+  - String cep
+}
+
+class Telefone {
+  - String numero
+}
+
+class Controle{
+  - nome: String
+  - preco: Double
+  - touchpad: Boolean
+  - gatilhosAdaptaveis: Boolean
+  - estoque: Integer
+}
+
+class ControleWireless{
+  - alcance: Double
+  - frequencia: Double
+  - tempo_carga: Integer
+}
+
+class ControleWired{
+  - comprimento: Double
+  - tipoUSB: String
+}
+
+class Conexao{
+  - name: String
+}
+
+enum TIPO{
+  WIRELESS
+  WIRED
+}
+
+class Botao {
+  - id: Long
+  - tipo: String
+}
+
+class Fabricante {
+
+}
+
+class Plataforma {
+  - nome: String
+}
+
+enum Cor {
+  PRETO
+  BRANCO
+  VERMELHO
+  AZUL
+  ROXO
+}
+
+class Pedido {
+  - dataPedido: LocalDate 
+  - total: Double 
+}
+
+class ItemPedido {
+  - quantidade: Integer
+  - preco: Double
+}
+
+
+class Usuario {
+  - username: String 
+  - senha: String
+}
+
+enum Perfil {
+  ADM
+  USER
+}
+
+enum TipoPagamento{
+  DEBITO
+  CREDITO
+  PIX
+  BOLETO
+}
+
+
+' Heranças
+PessoaFisica --|> Pessoa
+PessoaJuridica --|> Pessoa
+Cliente --|> PessoaFisica
+Fabricante --|> PessoaJuridica
+ControleWireless --|> Controle
+ControleWired --|> Controle
+
+' Relacionamentos
+Pessoa "1" o--> "1" Telefone
+Pessoa "1" o--> "*" Endereco
+Fabricante "1" --> "*" Controle
+Controle "*" --> "*" Plataforma
+Controle "*" *--> "*" Botao 
+Pedido "1" --> "*" ItemPedido 
+ItemPedido "*" --> "0..1" ControleWireless
+ItemPedido "*" --> "0..1" ControleWired
+Pedido "*" --> "1" Usuario
+Pedido "*" --> "1" Endereco
+Usuario "1" --> "1" Cliente
+Conexao "*" --> "1" TIPO 
+
+' Enums
+Controle "*" --> "1" Cor
+Controle "*" --> "*" Conexao
+Usuario "*" --> "1" Perfil
+Pedido "*" --> "1" TipoPagamento
+
+@enduml
