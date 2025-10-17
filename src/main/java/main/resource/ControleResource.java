@@ -27,10 +27,16 @@ public class ControleResource {
     @GET
     public Response buscarTodos(
         @QueryParam("page") @DefaultValue("0") int page,
-        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+        @QueryParam("pageSize") @DefaultValue("7") int pageSize
     ) { 
         LOG.info("Requisição para buscar todos os controles.");
         return Response.ok(service.findAll(page, pageSize)).build();
+    }
+
+    @GET
+    @Path("/count")
+    public Response count(){
+        return Response.ok(service.count()).build();
     }
 
     @GET
@@ -38,7 +44,7 @@ public class ControleResource {
     public Response buscarPorFabricante(
         @PathParam("fabricante") String fabricante,
         @QueryParam("page") @DefaultValue("0") int page,
-        @QueryParam("pageSize") @DefaultValue("100") int pageSize
+        @QueryParam("pageSize") @DefaultValue("7") int pageSize
         ) { 
         LOG.infof("Buscando controles pelo fabricante: %s", fabricante);
         return Response.ok(service.findByFabricante(fabricante, page, pageSize)).build();

@@ -14,5 +14,6 @@ public interface ControleService {
     List<ControleResponseDTO> findByFabricante(String fabricante, int page, int pageSize);
     List<ControleResponseDTO> findByCor(String cor);
     List<ControleResponseDTO> findAll(int page, int pageSize);
+    Long count();
     
 }

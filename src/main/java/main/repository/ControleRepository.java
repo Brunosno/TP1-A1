@@ -11,7 +11,7 @@ import main.model.controle.Cor;
 @ApplicationScoped
 public class ControleRepository implements PanacheRepository<Controle> {
 
-    public PanacheQuery<Controle> findAllPaginatiom(){
+    public PanacheQuery<Controle> findAllPagination(){
         return find("SELECT c FROM Controle c ORDER BY c.nome");
     }
 

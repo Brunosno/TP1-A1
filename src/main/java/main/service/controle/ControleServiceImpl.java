@@ -5,8 +5,6 @@ import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.DefaultValue;
-import jakarta.ws.rs.QueryParam;
 import main.model.controle.Cor;
 import main.model.controle.Fabricante;
 import main.model.controle.Plataforma;
@@ -109,7 +107,11 @@ public class ControleServiceImpl implements ControleService {
 
     @Override
     public List<ControleResponseDTO> findAll(int page, int pageSize) {
-        return ControleRepository.findAllPaginatiom().page(page, pageSize).list().stream().map(c -> ControleResponseDTO.valueOf(c)).toList();
+        return ControleRepository.findAllPagination().page(page, pageSize).list().stream().map(c -> ControleResponseDTO.valueOf(c)).toList();
     }
-    
+
+    @Override
+    public Long count(){
+        return ControleRepository.count();
+    }
 }
