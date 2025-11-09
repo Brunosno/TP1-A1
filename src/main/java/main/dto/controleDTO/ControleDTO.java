@@ -34,8 +34,8 @@ public record ControleDTO(
     boolean touchpad,
 
     boolean gatilhosAdaptaveis,
-    
-    Integer quantidade) {
+
+    List<Long> loteIds) {
 
         public static ControleDTO valueOf(Controle controle) {
         if (controle == null) return null;
@@ -50,7 +50,7 @@ public record ControleDTO(
             controle.getAlimentacao(),
             controle.isTouchpad(),
             controle.isGatilhosAdaptaveis(),
-            controle.getEstoque()
+            controle.getLotes() != null ? controle.getLotes().stream().map(l -> l.getId()).toList() : null
         );
     }
 }

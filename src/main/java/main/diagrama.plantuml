@@ -2,20 +2,26 @@
 
 left to right direction
 
-class Pessoa {
-  - nome: String
-  - email: String 
+class DefaultEntity {
+  - Long id
+  - LocalDate created_At
+  - LocalDate updated_At
 }
 
-class PessoaFisica {
+class Pessoa{
+  - String nome
+  - String email 
+}
+
+class Usuario {
+  - String username
+  - String senha
   - String cpf
 }
 
-class PessoaJuridica {
+class Fabricante {
   - String cnpj
 }
-
-class Cliente {}
 
 class Endereco {
   - String rua
@@ -31,44 +37,20 @@ class Telefone {
 }
 
 class Controle{
-  - nome: String
-  - preco: Double
-  - touchpad: Boolean
-  - gatilhosAdaptaveis: Boolean
-  - estoque: Integer
+  - String nome
+  - Double preco
+  - Boolean touchpad
+  - Boolean gatilhosAdaptaveis
+  - Integer estoque
 }
 
-class ControleWireless{
-  - alcance: Double
-  - frequencia: Double
-  - tempo_carga: Integer
-}
-
-class ControleWired{
-  - comprimento: Double
-  - tipoUSB: String
-}
-
-class Conexao{
-  - name: String
-}
-
-enum TIPO{
-  WIRELESS
-  WIRED
-}
-
-class Botao {
-  - id: Long
-  - tipo: String
-}
-
-class Fabricante {
-
+class ImagemControle {
+  - Long id
+  - String url
 }
 
 class Plataforma {
-  - nome: String
+  - String nome
 }
 
 enum Cor {
@@ -80,19 +62,22 @@ enum Cor {
 }
 
 class Pedido {
-  - dataPedido: LocalDate 
-  - total: Double 
+  - LocalDate dataPedido
+  - Double total 
 }
 
 class ItemPedido {
-  - quantidade: Integer
-  - preco: Double
+  - Integer quantidade
+  - Double preco
 }
 
+class Conexao {
+  - String descricao
+}
 
-class Usuario {
-  - username: String 
-  - senha: String
+enum Tipo{
+  WIRELESS
+  WIRED
 }
 
 enum Perfil {
@@ -109,30 +94,26 @@ enum TipoPagamento{
 
 
 ' Heranças
-PessoaFisica --|> Pessoa
-PessoaJuridica --|> Pessoa
-Cliente --|> PessoaFisica
-Fabricante --|> PessoaJuridica
-ControleWireless --|> Controle
-ControleWired --|> Controle
+Pessoa --|> DefaultEntity
+Usuario --|> Pessoa
+Fabricante --|> Pessoa
+Controle --|> DefaultEntity
 
 ' Relacionamentos
-Pessoa "1" o--> "1" Telefone
-Pessoa "1" o--> "*" Endereco
-Fabricante "1" --> "*" Controle
-Controle "*" --> "*" Plataforma
-Controle "*" *--> "*" Botao 
+Pessoa "1" --> "1" Telefone
+Pessoa "1" --> "*" Endereco
+Fabricante "1" --> "*" Controle : <associacao>
+Controle "*" --> "*" Plataforma : <agregacao>
+Controle "1" --> "*" ImagemControle : <composicao>
 Pedido "1" --> "*" ItemPedido 
-ItemPedido "*" --> "0..1" ControleWireless
-ItemPedido "*" --> "0..1" ControleWired
+ItemPedido "*" --> "1" Controle : <associacao>
 Pedido "*" --> "1" Usuario
 Pedido "*" --> "1" Endereco
-Usuario "1" --> "1" Cliente
-Conexao "*" --> "1" TIPO 
+Controle "*" --> "*" Conexao : <associacao>
 
 ' Enums
-Controle "*" --> "1" Cor
-Controle "*" --> "*" Conexao
+Controle "*" --> "1" Cor : <agregacao>
+Conexao "*" --> "1" Tipo
 Usuario "*" --> "1" Perfil
 Pedido "*" --> "1" TipoPagamento
 

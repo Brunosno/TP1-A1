@@ -2,17 +2,14 @@ package main.resource;
 
 import java.util.List;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
 import main.dto.enderecoDTO.EnderecoDTO;
 import main.dto.enderecoDTO.EnderecoResponseDTO;
-import main.service.endereco.EnderecoService;
-
+import main.service.endereco.EnderecoServiceImpl;
 import org.jboss.logging.Logger;
 
 @Path("enderecos")
@@ -23,7 +20,7 @@ public class EnderecoResource {
     private static final Logger LOG = Logger.getLogger(EnderecoResource.class);
 
     @Inject
-    EnderecoService enderecoService;
+    EnderecoServiceImpl enderecoService;
 
     @POST
     public Response incluir(EnderecoDTO dto) {
@@ -34,43 +31,44 @@ public class EnderecoResource {
     }
 
     @GET
-    @RolesAllowed({"Adm"})
-    public List<EnderecoResponseDTO> buscarTodos() {
+    public Response buscarTodos(@QueryParam("page") Integer page, @QueryParam("pageSize") Integer pageSize) {
         LOG.info("Listando todos os endereços.");
-        return enderecoService.findAll();
+
+        if (page != null && pageSize != null) {
+            List<EnderecoResponseDTO> lista = enderecoService.findAll(page, pageSize);
+            LOG.debugf("Listando endereços paginados: página %d, tamanho %d", page, pageSize);
+            return Response.ok(lista).build();
+        }
+
+        List<EnderecoResponseDTO> lista = enderecoService.findAll();
+        return Response.ok(lista).build();
+    }
+
+    @GET
+    @Path("/count")
+    public Response count() {
+        long total = enderecoService.count();
+        return Response.ok(total).build();
     }
 
     @GET
     @Path("/{id}")
-    @RolesAllowed({"Adm", "User"})
     public Response buscarPorId(@PathParam("id") Long id) {
         LOG.infof("Buscando endereço com ID: %d", id);
         EnderecoResponseDTO endereco = enderecoService.findById(id);
-        if (endereco != null) {
-            LOG.debugf("Endereço encontrado");
-            return Response.ok(endereco).build();
-        }
-        LOG.warnf("Endereço com ID %d não encontrado.", id);
-        return Response.status(Status.NOT_FOUND).build();
+        return Response.ok(endereco).build();
     }
 
     @GET
     @Path("/cep/{cep}")
-    @RolesAllowed({"Adm"})
     public Response buscarPorCEP(@PathParam("cep") String cep) {
-        LOG.infof("Buscando endereço com cep: %d", cep);
+        LOG.infof("Buscando endereço com cep: %s", cep);
         EnderecoResponseDTO endereco = enderecoService.findByCEP(cep);
-        if (endereco != null) {
-            LOG.debugf("Endereço encontrado");
-            return Response.ok(endereco).build();
-        }
-        LOG.warnf("Endereço com CEP %d não encontrado.", cep);
-        return Response.status(Status.NOT_FOUND).build();
+        return Response.ok(endereco).build();
     }
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed({"Adm", "User"})
     public Response alterar(@PathParam("id") Long id, EnderecoDTO dto) {
         LOG.infof("Atualizando endereço com ID: %d", id);
         enderecoService.update(id, dto);
@@ -80,7 +78,6 @@ public class EnderecoResource {
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed({"Adm", "User"})
     public Response apagar(@PathParam("id") Long id) {
         LOG.infof("Apagando endereço com ID: %d", id);
         enderecoService.delete(id);

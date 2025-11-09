@@ -31,7 +31,7 @@ public class TelefoneResource {
     TelefoneService service;
 
     @GET
-    @RolesAllowed({"Adm"})
+    //@RolesAllowed({"Adm"})
     public Response buscarTodos(){
         LOG.info("Buscando todos os telefones.");
         return Response.ok().entity(service.findAll()).build();
@@ -39,7 +39,7 @@ public class TelefoneResource {
 
     @GET
     @Path("/{id}")
-    @RolesAllowed({"Adm"})
+    //@RolesAllowed({"Adm"})
     public Response buscarPorId(@PathParam("id") Long id) {
         LOG.infof("Buscando telefone com ID: %d", id);
         TelefoneResponseDTO telefone = service.findById(id);
@@ -53,7 +53,7 @@ public class TelefoneResource {
 
     @GET
     @Path("/numero/{numero}")
-    @RolesAllowed({"Adm"})
+    //@RolesAllowed({"Adm"})
     public Response buscarPorNumero(@PathParam("numero") String numero) {
         LOG.infof("Buscando telefone com número: %s", numero);
         TelefoneResponseDTO telefone = service.findByNumber(numero);
@@ -66,7 +66,7 @@ public class TelefoneResource {
     }
 
     @POST
-    @RolesAllowed({"Adm", "User"})
+    //@RolesAllowed({"Adm", "User"})
     @Transactional
     public Response incluir(TelefoneDTO dto) {
         LOG.infof("Incluindo novo telefone: %s", dto.numero());
@@ -77,7 +77,7 @@ public class TelefoneResource {
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed({"Adm", "User"})
+    //@RolesAllowed({"Adm", "User"})
     public Response alterar(@PathParam("id") Long id, TelefoneDTO dto) {
         LOG.infof("Alterando telefone com ID: %d", id);
         service.update(id, dto);
@@ -87,7 +87,7 @@ public class TelefoneResource {
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed({"Adm", "User"})
+    //@RolesAllowed({"Adm", "User"})
     @Transactional
     public Response apagar(@PathParam("id") Long id) {
         LOG.infof("Apagando telefone com ID: %d", id);

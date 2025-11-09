@@ -19,7 +19,6 @@ public class EnderecoServiceImpl implements EnderecoService {
     @Override
     @Transactional
     public EnderecoResponseDTO create(EnderecoDTO dto) {
-
         Endereco endereco = new Endereco();
         endereco.setRua(dto.rua());
         endereco.setNumero(dto.numero());
@@ -27,9 +26,7 @@ public class EnderecoServiceImpl implements EnderecoService {
         endereco.setCidade(dto.cidade());
         endereco.setEstado(dto.estado());
         endereco.setCep(dto.cep());
-
         enderecoRepository.persist(endereco);
-
         return EnderecoResponseDTO.valueOf(endereco);
     }
 
@@ -37,9 +34,8 @@ public class EnderecoServiceImpl implements EnderecoService {
     @Transactional
     public void update(Long id, EnderecoDTO dto) {
         Endereco endereco = enderecoRepository.findById(id);
-        if (endereco == null) {
+        if (endereco == null)
             throw new RuntimeException("Endereço não encontrado com ID: " + id);
-        }
 
         endereco.setRua(dto.rua());
         endereco.setNumero(dto.numero());
@@ -53,34 +49,44 @@ public class EnderecoServiceImpl implements EnderecoService {
     @Transactional
     public void delete(Long id) {
         Endereco endereco = enderecoRepository.findById(id);
-        if (endereco == null) {
+        if (endereco == null)
             throw new RuntimeException("Endereço não encontrado com ID: " + id);
-        }
         enderecoRepository.delete(endereco);
     }
 
     @Override
     public EnderecoResponseDTO findById(Long id) {
         Endereco endereco = enderecoRepository.findById(id);
-        if (endereco == null) {
+        if (endereco == null)
             throw new RuntimeException("Endereço não encontrado com ID: " + id);
-        }
         return EnderecoResponseDTO.valueOf(endereco);
     }
 
     @Override
-    public EnderecoResponseDTO findByCEP(String cep){
+    public EnderecoResponseDTO findByCEP(String cep) {
         Endereco endereco = enderecoRepository.findByCEP(cep);
-        if (endereco == null) {
+        if (endereco == null)
             throw new RuntimeException("Endereço não encontrado com cep: " + cep);
-        }
         return EnderecoResponseDTO.valueOf(endereco);
     }
 
     @Override
     public List<EnderecoResponseDTO> findAll() {
         return enderecoRepository.listAll().stream()
-            .map(EnderecoResponseDTO::valueOf)
-            .toList();
+                .map(EnderecoResponseDTO::valueOf)
+                .toList();
+    }
+
+    public List<EnderecoResponseDTO> findAll(int page, int pageSize) {
+        return enderecoRepository.findAllPagination()
+                .page(page, pageSize)
+                .list()
+                .stream()
+                .map(EnderecoResponseDTO::valueOf)
+                .toList();
+    }
+
+    public long count() {
+        return enderecoRepository.count();
     }
 }

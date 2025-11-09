@@ -2,6 +2,9 @@ package main.model.controle;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,7 +12,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import main.model.DefaultEntity;
+import main.model.lote.Lote;
 import main.model.pedido.Pedido;
 
 @Entity
@@ -33,6 +38,10 @@ public class Controle extends DefaultEntity {
     private boolean touchpad;
 
     private boolean gatilhosAdaptaveis;
+
+    @OneToMany(mappedBy = "controle", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Lote> lotes;
 
     @ManyToOne
     @JoinColumn(name = "pedido_id")
@@ -71,6 +80,14 @@ public class Controle extends DefaultEntity {
 
     public void setFabricante(Fabricante fabricante) {
         this.fabricante = fabricante;
+    }
+
+    public List<Lote> getLotes(){ 
+        return lotes; 
+    }
+
+    public void setLotes(List<Lote> lotes){ 
+        this.lotes = lotes;
     }
 
     public Cor getCor() {

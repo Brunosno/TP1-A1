@@ -6,6 +6,7 @@ import main.dto.plataformaDTO.PlataformaResponseDTO;
 import main.model.controle.Controle;
 import main.model.controle.Cor;
 import main.model.controle.Fabricante;
+import main.model.lote.Lote;
 
 public record ControleResponseDTO(
     Long id,
@@ -18,6 +19,7 @@ public record ControleResponseDTO(
     String alimentacao,
     boolean touchpad,
     boolean gatilhosAdaptaveis,
+    List<Lote> lotes,
     Integer estoque) {
 
     public static ControleResponseDTO valueOf(Controle controle) {
@@ -37,6 +39,7 @@ public record ControleResponseDTO(
             controle.getAlimentacao(), 
             controle.isTouchpad(), 
             controle.isGatilhosAdaptaveis(),
+            controle.getLotes() != null ? controle.getLotes() : null,
             controle.getEstoque()
         );
     }

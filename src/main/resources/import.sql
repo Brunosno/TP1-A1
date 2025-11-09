@@ -1,10 +1,3 @@
--- This file allow to write SQL commands that will be emitted in test and dev.
--- The commands are commented as their support depends of the database
--- insert into myentity (id, field) values(1, 'field-1');
--- insert into myentity (id, field) values(2, 'field-2');
--- insert into myentity (id, field) values(3, 'field-3');
--- alter sequence myentity_seq restart with 4;
-
 insert into pessoa(email, nome) values ('bruno@gmail.com', 'Bruno');
 insert into pessoafisica(id, cpf) values (1, '078.603.371-18');
 insert into cliente (id) values (1);
@@ -21,6 +14,11 @@ insert into pessoa(email, nome) values ('nintendo@gmail.com', 'Nintendo');
 insert into pessoajuridica(id, cnpj) values (4, '07.018.235/1845-03');
 insert into fabricante (id) values (4);
 
+insert into telefone (numero) values 
+    ('(63) 99999-9999'),
+    ('(63) 98888-8888'),
+    ('(63) 97777-7777');
+
 insert into endereco (pessoa_id, rua, numero, bairro, cidade, estado, cep)
 values 
     (1, 'Rua A', '123', 'Bairro A', 'Cidade A', 'SP', '77001-234'),
@@ -28,7 +26,17 @@ values
     (1, 'Rua C', '789', 'Bairro C', 'Cidade C', 'MG', '77003-456');
 
 
-insert into plataforma (id, nome) values (1, 'PC'), (2, 'PlayStation'), (3, 'Xbox'), (4, 'Nintendo');
+insert into plataforma (nome) values ('PC'), ('PlayStation'), ('Xbox'), ('Nintendo');
+
+insert into lote (quantidade, descricao) values 
+    (100, 'Estoque Central'),
+    (50, 'Estoque Secundário'),
+    (200, 'Estoque Terciário'),
+    (75, 'Estoque Quaternário'),
+    (150, 'Estoque Quinário'),
+    (80, 'Estoque Extra'),
+    (60, 'Estoque Reserva'), 
+    (90, 'Estoque Adicional');
 
 insert into controle (nome, id_fabricante, cor, preco, conexao, alimentacao, touchpad, gatilhosadaptaveis, estoque) 
 values
