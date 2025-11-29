@@ -33,7 +33,7 @@ public class AuthResource {
     UsuarioService usuarioService;
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response login(AuthDTO dto) {
         LOG.infof("Tentativa de login para usuário: %s", dto.username());
         String hash = null;
@@ -52,8 +52,9 @@ public class AuthResource {
           return Response.noContent().build();
         }
 
-        String token = jwtService.generateJwt(usuario.username(), usuario.perfil().getNome());
+        String token = jwtService.generateJwt(usuario.username(), usuario.perfil().name());
         LOG.infof("Login bem sucedido para usuário: %s", dto.username());
-        return Response.ok().header("Authorization", token).entity(usuario).build();     
+
+        return Response.ok().entity(usuario).header("Authorization", token).build();     
     }
 }

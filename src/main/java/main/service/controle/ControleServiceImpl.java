@@ -1,12 +1,18 @@
 package main.service.controle;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 import main.model.controle.Cor;
-import main.model.controle.Fabricante;
+import main.model.fabricante.Fabricante;
+import main.model.imagemControle.ImagemControle;
 import main.model.controle.Plataforma;
 import main.model.lote.Lote;
 import main.dto.controleDTO.ControleDTO;
@@ -14,8 +20,10 @@ import main.dto.controleDTO.ControleResponseDTO;
 import main.model.controle.Controle;
 import main.repository.ControleRepository;
 import main.repository.FabricanteRepository;
+import main.repository.ImagemControleRepository;
 import main.repository.LoteRepository;
 import main.repository.PlataformaRepository;
+import main.service.minio.MinioService;
 
 @ApplicationScoped
 public class ControleServiceImpl implements ControleService {
@@ -32,14 +40,17 @@ public class ControleServiceImpl implements ControleService {
     @Inject
     LoteRepository loteRepository;
 
+    @Inject
+    MinioService minioService;
+
+    @Inject
+    ImagemControleRepository imagemControleRepository;
+
     @Override
     @Transactional
     public ControleResponseDTO create(ControleDTO dto) {
         Controle novoControle = new Controle();
-
-        Fabricante fabricante = fabricanteRepository.findById(dto.idFabricante());
         novoControle.setNome(dto.nome());
-        novoControle.setFabricante(fabricante);
         novoControle.setAlimentacao(dto.alimentacao());
         novoControle.setConexao(dto.conexao());
         novoControle.setTouchpad(dto.touchpad());
@@ -53,8 +64,10 @@ public class ControleServiceImpl implements ControleService {
             .toList();
         novoControle.setPlataformas(plataformas);
 
-        ControleRepository.persist(novoControle);
-        ControleRepository.flush();
+        if (dto.idFabricante() != null) {
+            Fabricante fabricante = fabricanteRepository.findById(dto.idFabricante());
+            novoControle.setFabricante(fabricante);
+        }
 
         if (dto.loteIds() != null && !dto.loteIds().isEmpty()) {
             List<Lote> lotes = dto.loteIds().stream()
@@ -72,13 +85,77 @@ public class ControleServiceImpl implements ControleService {
             novoControle.setEstoque(0);
         }
 
+        if (dto.imagens() != null) {
+            novoControle.setImagens(
+                dto.imagens().stream().map(imgDTO -> {
+                    ImagemControle img = new ImagemControle();
+                    img.setUrl(imgDTO.url());
+                    img.setDescricao(imgDTO.descricao());
+                    img.setControle(novoControle);
+                    return img;
+                }).collect(Collectors.toList())
+            );
+        }
+
+        ControleRepository.persist(novoControle);
+        ControleRepository.flush();
         return ControleResponseDTO.valueOf(novoControle);
+    }
+
+    @Override
+    @Transactional
+    public ControleResponseDTO createImage(ControleDTO dto, List<FileUpload> files) {
+        ControleResponseDTO novo = create(dto);
+
+        Controle controle = ControleRepository.findById(novo.id());
+        if (controle == null)
+            throw new NotFoundException("Controle não encontrada com ID: " + novo.id());
+
+        if (files == null || files.isEmpty())
+            throw new IllegalArgumentException("Nenhum arquivo enviado.");
+
+        for (FileUpload file : files) {
+            try {
+
+                var path = file.uploadedFile();
+
+                try (InputStream is = java.nio.file.Files.newInputStream(path)) {
+
+                    String fileName = java.util.UUID.randomUUID() + "-" + file.fileName();
+
+                    minioService.upload(
+                            fileName,
+                            is,
+                            file.contentType(),
+                            java.nio.file.Files.size(path)
+                    );
+
+                    String url = minioService.generatePresignedUrl(fileName).toString();
+
+                    ImagemControle imagem = new ImagemControle();
+                    imagem.setUrl(url);
+                    imagem.setDescricao(file.fileName());
+                    imagem.setControle(controle);
+
+                    imagemControleRepository.persist(imagem);
+
+                    controle.getImagens().add(imagem);
+                }
+
+            } catch (Exception e) {
+                throw new RuntimeException("Erro ao processar upload da imagem: " + file.fileName(), e);
+            }
+        }
+
+        ControleRepository.persist(controle);
+
+        return ControleResponseDTO.valueOf(controle);
     }
 
 
     @Override
     @Transactional
-    public void update(long id, ControleDTO dto) {
+    public ControleResponseDTO update(long id, ControleDTO dto) {
         Controle edicaoControle = ControleRepository.findById(id);
         if (edicaoControle == null) {
             throw new IllegalArgumentException("Controle com ID " + id + " não encontrado.");
@@ -89,7 +166,6 @@ public class ControleServiceImpl implements ControleService {
             throw new IllegalArgumentException("Fabricante com ID " + dto.idFabricante() + " não encontrado.");
         }
 
-        // Atualiza atributos básicos
         edicaoControle.setNome(dto.nome());
         edicaoControle.setFabricante(fabricante);
         edicaoControle.setAlimentacao(dto.alimentacao());
@@ -99,21 +175,18 @@ public class ControleServiceImpl implements ControleService {
         edicaoControle.setCor(Cor.valueOf(dto.idCor()));
         edicaoControle.setPreco(dto.preco());
 
-        // Atualiza plataformas
         List<Plataforma> plataformas = dto.idsPlataformas()
             .stream()
             .map(idPlataforma -> plataformaRepository.findById(idPlataforma))
             .toList();
         edicaoControle.setPlataformas(plataformas);
 
-        // Limpa relacionamentos antigos de lotes
         if (edicaoControle.getLotes() != null) {
             for (Lote antigo : edicaoControle.getLotes()) {
                 antigo.setControle(null);
             }
         }
 
-        // Atualiza novos lotes
         if (dto.loteIds() == null || dto.loteIds().isEmpty()) {
             edicaoControle.setLotes(null);
             edicaoControle.setEstoque(0);
@@ -124,7 +197,7 @@ public class ControleServiceImpl implements ControleService {
 
             for (Lote lote : lotes) {
                 lote.setControle(edicaoControle);
-                loteRepository.persist(lote); // força vínculo
+                loteRepository.persist(lote);
             }
 
             edicaoControle.setLotes(lotes);
@@ -132,7 +205,80 @@ public class ControleServiceImpl implements ControleService {
             edicaoControle.setEstoque(totalEstoque);
         }
 
-        ControleRepository.flush(); // garante persistência
+        ControleRepository.flush();
+
+        return ControleResponseDTO.valueOf(edicaoControle);
+    }
+
+    @Override
+    @Transactional
+    public ControleResponseDTO updateImage(long id, ControleDTO dto, List<FileUpload> files) {
+
+        ControleResponseDTO atualizado = update(id, dto);
+
+        Controle controle = ControleRepository.findById(atualizado.id());
+        if (controle == null)
+            throw new NotFoundException("Raquete não encontrada com ID: " + id);
+
+        if (files == null || files.isEmpty())
+            throw new IllegalArgumentException("Nenhum arquivo enviado.");
+
+        // -------------------------------------------------------------------
+        // 1. REMOVE IMAGENS ANTIGAS (DB + OPCIONAL MINIO)
+        // -------------------------------------------------------------------
+        if (controle.getImagens() != null && !controle.getImagens().isEmpty()) {
+
+            for (ImagemControle imgOld : controle.getImagens()) {
+
+                String oldFileName = imgOld.getUrl().substring(imgOld.getUrl().lastIndexOf("/") + 1);
+                minioService.delete(oldFileName);
+
+                imagemControleRepository.delete(imgOld);
+            }
+
+            controle.getImagens().clear();
+        }
+
+        // -------------------------------------------------------------------
+        // 2. PROCESSA NOVAS IMAGENS — MESMA LÓGICA DO createImagens
+        // -------------------------------------------------------------------
+        for (FileUpload file : files) {
+            try {
+                var path = file.uploadedFile();
+
+                try (InputStream is = java.nio.file.Files.newInputStream(path)) {
+
+                    String fileName = java.util.UUID.randomUUID() + "-" + file.fileName();
+
+                    minioService.upload(
+                            fileName,
+                            is,
+                            file.contentType(),
+                            java.nio.file.Files.size(path)
+                    );
+
+                    // URL gerada
+                    String url = minioService.generatePresignedUrl(fileName).toString();
+
+                    // Cria nova entidade de imagem
+                    ImagemControle imagem = new ImagemControle();
+                    imagem.setUrl(url);
+                    imagem.setDescricao(file.fileName());
+                    imagem.setControle(controle);
+
+                    imagemControleRepository.persist(imagem);
+
+                    controle.getImagens().add(imagem);
+                }
+
+            } catch (Exception e) {
+                throw new RuntimeException("Erro ao atualizar imagem: " + file.fileName(), e);
+            }
+        }
+
+        ControleRepository.persist(controle);
+
+        return ControleResponseDTO.valueOf(controle);
     }
 
     @Override

@@ -5,11 +5,12 @@ import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+
 import main.dto.fabricanteDTO.FabricanteDTO;
 import main.dto.fabricanteDTO.FabricanteResponseDTO;
-import main.model.cliente.Endereco;
-import main.model.cliente.Telefone;
-import main.model.controle.Fabricante;
+import main.model.endereco.Endereco;
+import main.model.telefone.Telefone;
+import main.model.fabricante.Fabricante;
 import main.repository.EnderecoRepository;
 import main.repository.FabricanteRepository;
 import main.repository.TelefoneRepository;
@@ -31,18 +32,27 @@ public class FabricanteServiceImpl implements FabricanteService {
     public FabricanteResponseDTO create(FabricanteDTO fabricanteDTO) {
         Fabricante novoFabricante = new Fabricante();
 
-        Telefone telefone = telefoneRepository.findById(fabricanteDTO.idtelefone());
-        List<Endereco> enderecos = enderecoRepository.find("id in ?1", fabricanteDTO.idEnderecos()).list();
+        if(fabricanteDTO.idtelefone() == null) {
+            novoFabricante.setTelefone(null);
+        }else{
+            Telefone telefone = telefoneRepository.findById(fabricanteDTO.idtelefone());
+            novoFabricante.setTelefone(telefone);
+        }
 
-        if (enderecos.size() != fabricanteDTO.idEnderecos().size()) {
-            throw new IllegalArgumentException("Um ou mais endereços não foram encontrados.");
+        if(fabricanteDTO.idEnderecos() == null || fabricanteDTO.idEnderecos().isEmpty()) {
+            novoFabricante.setEnderecos(null);
+        }else{
+            List<Endereco> enderecos = enderecoRepository.find("id in ?1", fabricanteDTO.idEnderecos()).list();
+            if (enderecos.size() != fabricanteDTO.idEnderecos().size()) {
+                throw new IllegalArgumentException("Um ou mais endereços não foram encontrados.");
+            }
+
+            novoFabricante.setEnderecos(enderecos);
         }
 
         novoFabricante.setNome(fabricanteDTO.nome());
         novoFabricante.setCNPJ(fabricanteDTO.cnpj());
         novoFabricante.setEmail(fabricanteDTO.email());
-        novoFabricante.setTelefone(telefone);
-        novoFabricante.setEnderecos(enderecos);
 
         fabricanteRepository.persist(novoFabricante);
 
@@ -54,44 +64,36 @@ public class FabricanteServiceImpl implements FabricanteService {
     public void update(Long id, FabricanteDTO fabricanteDTO) {
         Fabricante fabricanteExistente = fabricanteRepository.findById(id);
 
-        if (fabricanteExistente == null)
-            throw new IllegalArgumentException("Fabricante não encontrado.");
-
         Telefone telefone = telefoneRepository.findById(fabricanteDTO.idtelefone());
-        List<Endereco> enderecos = enderecoRepository.find("id in ?1", fabricanteDTO.idEnderecos()).list();
 
+        List<Endereco> enderecos = enderecoRepository.find("id in ?1", fabricanteDTO.idEnderecos()).list();
         if (enderecos.size() != fabricanteDTO.idEnderecos().size()) {
             throw new IllegalArgumentException("Um ou mais endereços não foram encontrados.");
         }
 
-        fabricanteExistente.setNome(fabricanteDTO.nome());
-        fabricanteExistente.setCNPJ(fabricanteDTO.cnpj());
-        fabricanteExistente.setEmail(fabricanteDTO.email());
-        fabricanteExistente.setTelefone(telefone);
-        fabricanteExistente.setEnderecos(enderecos);
+        if (fabricanteExistente != null) {
+            fabricanteExistente.setNome(fabricanteDTO.nome());
+            fabricanteExistente.setCNPJ(fabricanteDTO.cnpj());
+            fabricanteExistente.setEmail(fabricanteDTO.email());
+            fabricanteExistente.setTelefone(telefone);
+            fabricanteExistente.setEnderecos(enderecos);
+        }
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        fabricanteRepository.deleteById(id);
+        Fabricante fabricante = fabricanteRepository.findById(id);
+        if (fabricante != null) {
+            fabricanteRepository.delete(fabricante);
+        }
     }
 
-    // ✅ NOVO - com paginação
     @Override
-    public List<FabricanteResponseDTO> findAll(int page, int pageSize) {
-        return fabricanteRepository.findAllPagination()
-            .page(page, pageSize)
-            .list()
-            .stream()
+    public List<FabricanteResponseDTO> findAll() {
+        return fabricanteRepository.listAll().stream()
             .map(FabricanteResponseDTO::valueOf)
             .toList();
-    }
-
-    // ✅ NOVO - contagem total
-    @Override
-    public Long count() {
-        return fabricanteRepository.count();
     }
 
     @Override

@@ -6,12 +6,14 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import main.dto.clienteDTO.ClienteDTO;
 import main.dto.clienteDTO.ClienteResponseDTO;
+import main.dto.telefoneDTO.TelefoneResponseDTO;
 import main.model.cliente.Cliente;
-import main.model.cliente.Endereco;
-import main.model.cliente.Telefone;
+import main.model.endereco.Endereco;
+import main.model.telefone.Telefone;
 import main.repository.ClienteRepository;
 import main.repository.EnderecoRepository;
 import main.repository.TelefoneRepository;
+import main.service.telefone.TelefoneServiceImpl;
 
 @ApplicationScoped
 public class ClienteServiceImpl implements ClienteService {
@@ -23,26 +25,49 @@ public class ClienteServiceImpl implements ClienteService {
     TelefoneRepository telefoneRepository;
 
     @Inject
+    TelefoneServiceImpl telefoneService;
+
+    @Inject
     EnderecoRepository enderecoRepository;
 
     @Override
     @Transactional
-    public ClienteResponseDTO create(ClienteDTO clienteDTO) {
+    public ClienteResponseDTO create(ClienteDTO cliente) {
         Cliente newClient = new Cliente();
 
-        Telefone telefone = telefoneRepository.findById(clienteDTO.idTelefone());
-        
-        List<Endereco> enderecos = enderecoRepository.find("id in ?1", clienteDTO.idEnderecos()).list();
+        if (cliente.telefone() == null) {
+            newClient.setTelefone(null);
+        } else{
+            TelefoneResponseDTO telefoneNovo = telefoneService.create(cliente.telefone());
 
-        if (enderecos.size() != clienteDTO.idEnderecos().size()) {
-            throw new IllegalArgumentException("Um ou mais endereços não foram encontrados.");
+            if (telefoneNovo == null) {
+                throw new IllegalArgumentException("Falha ao criar telefone para o cliente.");
+            }
+
+            Telefone telefone = telefoneRepository.findById(telefoneNovo.id());
+
+            if (telefone == null) {
+                throw new IllegalArgumentException("Telefone não encontrado com ID: " + telefoneNovo.id());
+            }
+
+            newClient.setTelefone(telefone);
         }
 
-        newClient.setNome(clienteDTO.nome());
-        newClient.setCpf(clienteDTO.cpf());
-        newClient.setEmail(clienteDTO.email());
-        newClient.setTelefone(telefone);
-        newClient.setEnderecos(enderecos);
+        if (cliente.idEnderecos() == null || cliente.idEnderecos().isEmpty()) {
+            newClient.setEnderecos(null);
+        } else{
+            List<Endereco> enderecos = enderecoRepository.find("id in ?1", cliente.idEnderecos()).list();
+
+            if (enderecos.size() != cliente.idEnderecos().size()) {
+                throw new IllegalArgumentException("Um ou mais endereços não foram encontrados.");
+            }
+
+            newClient.setEnderecos(enderecos);
+        }
+
+        newClient.setNome(cliente.nome());
+        newClient.setCpf(cliente.cpf());
+        newClient.setEmail(cliente.email());
 
         clienteRepository.persist(newClient);
 
@@ -51,22 +76,59 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public void update(Long id, ClienteDTO clienteDTO) {
+    public void update(Long id, ClienteDTO cliente) {
         Cliente existingClient = clienteRepository.findById(id);
-        Telefone telefone = telefoneRepository.findById(clienteDTO.idTelefone());
 
-        List<Endereco> enderecos = enderecoRepository.find("id in ?1", clienteDTO.idEnderecos()).list();
-
-        if (enderecos.size() != clienteDTO.idEnderecos().size()) {
-            throw new IllegalArgumentException("Um ou mais endereços não foram encontrados.");
+        if (existingClient == null) {
+            throw new IllegalArgumentException("Cliente não encontrado com ID: " + id);
         }
 
-        if (existingClient != null) {
-            existingClient.setNome(clienteDTO.nome());
-            existingClient.setCpf(clienteDTO.cpf());
-            existingClient.setEmail(clienteDTO.email());
-            existingClient.setTelefone(telefone);
+        if ( cliente.telefone() == null) {
+        } else {
+
+            Telefone telefone = telefoneRepository.findByNumber(cliente.telefone().numero());
+
+            if (telefone == null) {
+                TelefoneResponseDTO telefoneNovo = telefoneService.create(cliente.telefone());
+
+                if (telefoneNovo == null) {
+                    throw new IllegalArgumentException("Falha ao criar telefone para o cliente.");
+                }
+
+                telefone = telefoneRepository.findById(telefoneNovo.id());
+
+                if (telefone == null) {
+                    throw new IllegalArgumentException("Telefone não encontrado com ID: " + telefoneNovo.id());
+                }
+
+                existingClient.setTelefone(telefone);
+            } else {
+                existingClient.setTelefone(telefone);
+            }
+        }
+
+        if ( cliente.idEnderecos() == null || cliente.idEnderecos().isEmpty()) {
+            existingClient.setEnderecos(null);
+        } else{
+            List<Endereco> enderecos = enderecoRepository.find("id in ?1", cliente.idEnderecos()).list();
+
+            if (enderecos.size() != cliente.idEnderecos().size()) {
+                throw new IllegalArgumentException("Um ou mais endereços não foram encontrados.");
+            }
+
             existingClient.setEnderecos(enderecos);
+        }
+
+        if (cliente.nome() != existingClient.getNome()){
+            existingClient.setNome(cliente.nome());
+        }
+
+        if (cliente.cpf() != existingClient.getCpf()){
+            existingClient.setCpf(cliente.cpf());
+        }
+
+        if (cliente.email() != existingClient.getEmail()){
+            existingClient.setEmail(cliente.email());
         }
     }
 

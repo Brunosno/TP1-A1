@@ -1,6 +1,6 @@
 package main.dto.telefoneDTO;
 
-import main.model.cliente.Telefone;
+import main.model.telefone.Telefone;
 
 public record TelefoneResponseDTO(
     Long id,

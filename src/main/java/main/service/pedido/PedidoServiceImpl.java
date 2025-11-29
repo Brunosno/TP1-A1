@@ -13,7 +13,7 @@ import main.dto.pedidoDTO.PedidoResponseDTO;
 import main.model.pedido.ItemPedido;
 import main.model.pedido.Pedido;
 import main.model.usuario.Usuario;
-import main.model.cliente.Endereco;
+import main.model.endereco.Endereco;
 import main.model.controle.Controle;
 import main.model.pagamento.TipoPagamento;
 import main.repository.ControleRepository;

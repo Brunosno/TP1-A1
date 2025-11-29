@@ -8,21 +8,25 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import main.dto.controleDTO.ControleDTO;
+import main.dto.controleDTO.ControleForm;
 import main.dto.controleDTO.ControleResponseDTO;
+import main.repository.ControleRepository;
 import main.service.controle.ControleService;
 
 import org.jboss.logging.Logger;
 
 @Path("controles")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.MULTIPART_FORM_DATA)
 public class ControleResource {
 
     private static final Logger LOG = Logger.getLogger(ControleResource.class);
 
     @Inject
     ControleService service;
+
+    @Inject
+    ControleRepository controleRepository;
 
     @GET
     public Response buscarTodos(
@@ -71,27 +75,42 @@ public class ControleResource {
     }
 
     @POST
-    //@RolesAllowed("Adm")
-    public Response incluir(ControleDTO dto) {
-        LOG.infof("Incluindo novo controle: Modelo=%s", dto.nome());
-        ControleResponseDTO novo = service.create(dto);
-        LOG.debugf("Controle criado com ID: %d", novo.id());
-        return Response.status(Status.CREATED).entity(novo).build();
+    @Path("/criar")
+    @Transactional
+    public Response criarComImagem(@BeanParam ControleForm dto) {
+        try {
+           LOG.info("Criando controle com imagem via upload multipart.");
+           ControleResponseDTO controle = service.createImage(dto.toDTO(), dto.imagens);
+           return Response.status(Status.CREATED).entity(controle).build();
+        } catch (Exception e) {
+            LOG.error("Erro ao criar controle com imagem", e);
+            return Response.status(Status.BAD_REQUEST)
+                    .entity(java.util.Map.of("erro", e.getMessage()))
+                    .build();
+        }
     }
+
 
     @PUT
     @Path("/{id}")
-    //@RolesAllowed({"Adm", "User"})
-    public Response alterar(@PathParam("id") Long id, ControleDTO dto) {
-        LOG.infof("Atualizando controle com ID: %d", id);
-        service.update(id, dto);
-        LOG.debug("Controle atualizado com sucesso.");
-        return Response.noContent().build();
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Transactional
+    public Response alterar(@PathParam("id") Long id, @BeanParam ControleForm form) {
+        try {
+            LOG.infof("Atualizando controle com ID %d com possível upload de imagem.", id);
+            ControleResponseDTO atualizado = service.updateImage(id, form.toDTO(), form.imagens);
+            return Response.ok(atualizado).build();
+        } catch (Exception e) {
+            LOG.error("Erro ao atualizar controle com imagem", e);
+            return Response.status(Status.BAD_REQUEST)
+                    .entity(java.util.Map.of("erro", e.getMessage()))
+                    .build();
+        }
     }
+
 
     @DELETE
     @Path("/{id}")
-    //@RolesAllowed({"Adm", "User"})
     @Transactional
     public Response apagar(@PathParam("id") Long id) {
         LOG.infof("Apagando controle com ID: %d", id);

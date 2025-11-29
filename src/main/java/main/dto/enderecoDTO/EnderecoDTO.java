@@ -2,7 +2,7 @@ package main.dto.enderecoDTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import main.model.cliente.Endereco;
+import main.model.endereco.Endereco;
 
 public record EnderecoDTO(
     @NotBlank(message = "A rua é obrigatória")

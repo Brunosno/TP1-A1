@@ -1,5 +1,6 @@
 package main.model.controle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -14,6 +15,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import main.model.DefaultEntity;
+import main.model.fabricante.Fabricante;
+import main.model.imagemControle.ImagemControle;
 import main.model.lote.Lote;
 import main.model.pedido.Pedido;
 
@@ -39,9 +42,8 @@ public class Controle extends DefaultEntity {
 
     private boolean gatilhosAdaptaveis;
 
-    @OneToMany(mappedBy = "controle", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Lote> lotes;
+    @OneToMany(mappedBy = "controle", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<Lote> lotes = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "pedido_id")
@@ -57,6 +59,17 @@ public class Controle extends DefaultEntity {
         inverseJoinColumns = @JoinColumn(name = "plataforma_id")
     )
     private List<Plataforma> plataformas;
+
+    @OneToMany(mappedBy = "controle", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImagemControle> imagens = new ArrayList<>();
+
+    public List<ImagemControle> getImagens(){ 
+        return imagens; 
+    }
+
+    public void setImagens(List<ImagemControle> imagens) { 
+        this.imagens = imagens; 
+    }
 
     public List<Plataforma> getPlataformas() {
         return plataformas;

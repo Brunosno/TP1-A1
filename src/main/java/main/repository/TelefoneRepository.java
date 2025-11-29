@@ -2,7 +2,7 @@ package main.repository;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
-import main.model.cliente.Telefone;
+import main.model.telefone.Telefone;
 
 @ApplicationScoped
 public class TelefoneRepository implements PanacheRepository<Telefone>{

@@ -1,6 +1,5 @@
 package main.dto.enderecoDTO;
-
-import main.model.cliente.Endereco;
+import main.model.endereco.Endereco;
 
 public record EnderecoResponseDTO(
     Long id,

@@ -7,7 +7,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import main.dto.telefoneDTO.TelefoneDTO;
 import main.dto.telefoneDTO.TelefoneResponseDTO;
-import main.model.cliente.Telefone;
+import main.model.telefone.Telefone;
 import main.repository.TelefoneRepository;
 
 @ApplicationScoped

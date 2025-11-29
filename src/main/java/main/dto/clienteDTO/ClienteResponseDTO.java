@@ -1,8 +1,9 @@
 package main.dto.clienteDTO;
 
 import java.util.List;
+
+import main.model.telefone.Telefone;
 import main.model.cliente.Cliente;
-import main.model.cliente.Telefone;
 import main.dto.enderecoDTO.EnderecoDTO;
 
 public record ClienteResponseDTO(
@@ -22,11 +23,11 @@ public record ClienteResponseDTO(
             : cliente.getEnderecos().stream().map(EnderecoDTO::valueOf).toList();
 
         return new ClienteResponseDTO(
-            cliente.getId(), 
-            cliente.getNome(), 
-            cliente.getCpf(), 
-            cliente.getEmail(), 
-            cliente.getTelefone(), 
+            cliente.getId(),
+            cliente.getNome(),
+            cliente.getCpf(),
+            cliente.getEmail(),
+            cliente.getTelefone(),
             enderecosDTO
         );
     }

@@ -2,8 +2,8 @@ package main.dto.fabricanteDTO;
 
 import java.util.List;
 
-import main.model.cliente.Telefone;
-import main.model.controle.Fabricante;
+import main.model.telefone.Telefone;
+import main.model.fabricante.Fabricante;
 import main.dto.enderecoDTO.EnderecoDTO;
 
 public record FabricanteResponseDTO(

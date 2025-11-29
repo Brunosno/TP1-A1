@@ -12,8 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import main.model.DefaultEntity;
-import main.model.cliente.Endereco;
-import main.model.cliente.Telefone;
+import main.model.endereco.Endereco;
+import main.model.telefone.Telefone;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -21,7 +21,7 @@ public abstract class Pessoa extends DefaultEntity {
 
     private String nome;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -63,5 +63,4 @@ public abstract class Pessoa extends DefaultEntity {
     public void setEnderecos(List<Endereco> enderecos) {
         this.enderecos = enderecos;
     }
-
 }

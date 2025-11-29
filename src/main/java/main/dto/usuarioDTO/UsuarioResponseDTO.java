@@ -2,15 +2,16 @@ package main.dto.usuarioDTO;
 
 import java.util.List;
 
+import main.model.cliente.Cliente;
 import main.model.pedido.Pedido;
 import main.model.usuario.Perfil;
 import main.model.usuario.Usuario;
 
 public record UsuarioResponseDTO(
     Long id,
-    String nome,
     String username,
     Perfil perfil,
+    Cliente cliente,
     List<Long> pedidosIds) {
 
     public static UsuarioResponseDTO valueOf(Usuario usuario) {
@@ -24,9 +25,9 @@ public record UsuarioResponseDTO(
 
         return new UsuarioResponseDTO(
             usuario.getId(), 
-            usuario.getCliente().getNome(), 
             usuario.getUsername(), 
             usuario.getPerfil(),
+            usuario.getCliente(), 
             pedidosIds);
     }
     

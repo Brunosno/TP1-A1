@@ -7,9 +7,11 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
 import main.dto.fabricanteDTO.FabricanteDTO;
 import main.dto.fabricanteDTO.FabricanteResponseDTO;
 import main.service.fabricante.FabricanteService;
+
 import org.jboss.logging.Logger;
 
 @Path("fabricantes")
@@ -23,19 +25,9 @@ public class FabricanteResource {
     FabricanteService service;
 
     @GET
-    public Response buscarTodos(
-        @QueryParam("page") @DefaultValue("0") int page,
-        @QueryParam("pageSize") @DefaultValue("7") int pageSize
-    ) {
-        LOG.infof("Buscando fabricantes: página=%d, tamanho=%d", page, pageSize);
-        return Response.ok(service.findAll(page, pageSize)).build();
-    }
-
-    @GET
-    @Path("/count")
-    public Response count() {
-        LOG.info("Contando total de fabricantes.");
-        return Response.ok(service.count()).build();
+    public Response buscarTodos() {
+        LOG.info("Buscando todos os fabricantes.");
+        return Response.ok(service.findAll()).build();
     }
 
     @GET

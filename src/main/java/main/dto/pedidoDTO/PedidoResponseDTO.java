@@ -3,7 +3,7 @@ package main.dto.pedidoDTO;
 import java.time.LocalDate;
 import java.util.List;
 
-import main.model.cliente.Endereco;
+import main.model.endereco.Endereco;
 import main.model.pagamento.TipoPagamento;
 import main.model.pedido.Pedido;
 

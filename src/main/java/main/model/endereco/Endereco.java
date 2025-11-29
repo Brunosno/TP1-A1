@@ -1,4 +1,4 @@
-package main.model.cliente;
+package main.model.endereco;
 
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;

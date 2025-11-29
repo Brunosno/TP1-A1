@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UsuarioService {
     UsuarioResponseDTO create(UsuarioDTO usuario) throws Exception;
-    void update(long id, UsuarioDTO usuario) throws Exception;
+    UsuarioResponseDTO update(long id, UsuarioDTO usuario) throws Exception;
     void delete(long id);
     UsuarioResponseDTO findById(long id);
     List<UsuarioResponseDTO> findAll();

@@ -16,6 +16,9 @@ class Pessoa{
 class Usuario {
   - String username
   - String senha
+}
+
+class Cliente {
   - String cpf
 }
 
@@ -95,7 +98,8 @@ enum TipoPagamento{
 
 ' Heranças
 Pessoa --|> DefaultEntity
-Usuario --|> Pessoa
+Usuario --|> Cliente
+Cliente --|> Pessoa
 Fabricante --|> Pessoa
 Controle --|> DefaultEntity
 

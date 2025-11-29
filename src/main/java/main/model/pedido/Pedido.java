@@ -9,7 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import main.model.DefaultEntity;
-import main.model.cliente.Endereco;
+import main.model.endereco.Endereco;
 import main.model.pagamento.TipoPagamento;
 import main.model.usuario.Usuario;
 
