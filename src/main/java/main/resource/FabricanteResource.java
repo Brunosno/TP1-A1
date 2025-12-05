@@ -14,6 +14,8 @@ import main.service.fabricante.FabricanteService;
 
 import org.jboss.logging.Logger;
 
+import io.quarkus.security.Authenticated;
+
 @Path("fabricantes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -32,6 +34,7 @@ public class FabricanteResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({"Adm"})
     public Response buscarPorId(@PathParam("id") Long id) {
         LOG.infof("Buscando fabricante com ID: %d", id);
         FabricanteResponseDTO fabricante = service.findById(id);
@@ -45,7 +48,7 @@ public class FabricanteResource {
 
     @GET
     @Path("/cnpj/{cnpj}")
-    //@RolesAllowed({"Adm"})
+    @RolesAllowed({"Adm"})
     public Response buscarPorCNPJ(@PathParam("cnpj") String cnpj) {
         LOG.infof("Buscando fabricante com CNPJ: %s", cnpj);
         FabricanteResponseDTO fabricante = service.findByCNPJ(cnpj);
@@ -58,7 +61,7 @@ public class FabricanteResource {
     }
 
     @POST
-    //@RolesAllowed({"Adm"})
+    @RolesAllowed({"Adm"})
     @Transactional
     public Response incluir(FabricanteDTO dto) {
         LOG.infof("Incluindo novo fabricante: Nome=%s, CNPJ=%s", dto.nome(), dto.cnpj());
@@ -69,7 +72,7 @@ public class FabricanteResource {
 
     @PUT
     @Path("/{id}")
-    //@RolesAllowed({"Adm"})
+    @RolesAllowed({"Adm"})
     public Response alterar(@PathParam("id") Long id, FabricanteDTO dto) {
         LOG.infof("Atualizando fabricante com ID: %d", id);
         service.update(id, dto);
@@ -79,7 +82,7 @@ public class FabricanteResource {
 
     @DELETE
     @Path("/{id}")
-    //@RolesAllowed({"Adm"})
+    @RolesAllowed({"Adm"})
     @Transactional
     public Response apagar(@PathParam("id") Long id) {
         LOG.infof("Apagando fabricante com ID: %d", id);

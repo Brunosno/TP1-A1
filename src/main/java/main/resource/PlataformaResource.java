@@ -1,5 +1,6 @@
 package main.resource;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -11,6 +12,7 @@ import main.dto.plataformaDTO.PlataformaResponseDTO;
 import main.service.plataforma.PlataformaService;
 import org.jboss.logging.Logger;
 
+@PermitAll
 @Path("plataformas")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

@@ -15,6 +15,8 @@ import main.service.endereco.EnderecoService;
 
 import org.jboss.logging.Logger;
 
+import io.quarkus.security.Authenticated;
+
 @Path("enderecos")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -34,7 +36,7 @@ public class EnderecoResource {
     }
 
     @GET
-    //@RolesAllowed({"Adm"})
+    @RolesAllowed({"Adm"})
     public List<EnderecoResponseDTO> buscarTodos() {
         LOG.info("Listando todos os endereços.");
         return enderecoService.findAll();
@@ -42,7 +44,7 @@ public class EnderecoResource {
 
     @GET
     @Path("/{id}")
-    //@RolesAllowed({"Adm", "User"})
+    @RolesAllowed({"Adm"})
     public Response buscarPorId(@PathParam("id") Long id) {
         LOG.infof("Buscando endereço com ID: %d", id);
         EnderecoResponseDTO endereco = enderecoService.findById(id);
@@ -56,7 +58,7 @@ public class EnderecoResource {
 
     @GET
     @Path("/cep/{cep}")
-    //@RolesAllowed({"Adm"})
+    @RolesAllowed({"Adm"})
     public Response buscarPorCEP(@PathParam("cep") String cep) {
         LOG.infof("Buscando endereço com cep: %d", cep);
         EnderecoResponseDTO endereco = enderecoService.findByCEP(cep);
@@ -70,7 +72,7 @@ public class EnderecoResource {
 
     @PUT
     @Path("/{id}")
-    //@RolesAllowed({"Adm", "User"})
+    @RolesAllowed({"Adm", "User"})
     public Response alterar(@PathParam("id") Long id, EnderecoDTO dto) {
         LOG.infof("Atualizando endereço com ID: %d", id);
         enderecoService.update(id, dto);
@@ -80,7 +82,7 @@ public class EnderecoResource {
 
     @DELETE
     @Path("/{id}")
-    //@RolesAllowed({"Adm", "User"})
+    @RolesAllowed({"Adm", "User"})
     public Response apagar(@PathParam("id") Long id) {
         LOG.infof("Apagando endereço com ID: %d", id);
         enderecoService.delete(id);

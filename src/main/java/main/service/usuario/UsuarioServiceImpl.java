@@ -140,8 +140,14 @@ public class UsuarioServiceImpl implements UsuarioService {
             }
 
             usuario.setUsername(dto.username());
-            usuario.setSenha(hashSenha.getHashSenha(dto.senha()));
-            usuario.setPerfil(Perfil.valueOf(dto.idPerfil()));
+
+            String hashSenhaNova = hashSenha.getHashSenha(dto.senha());
+
+            if(hashSenhaNova != usuario.getSenha()){
+                usuario.setSenha(hashSenha.getHashSenha(dto.senha()));
+            }
+
+            usuario.setPerfil(Perfil.valueOf(usuario.getPerfil().getId()));
             usuario.setCliente(cliente);
         } catch (Exception e) {
             System.err.println("Erro ao atualizar usuário: " + e.getMessage());
@@ -159,6 +165,12 @@ public class UsuarioServiceImpl implements UsuarioService {
             if (usuario == null) {
                 throw new IllegalArgumentException("Usuário não encontrado com ID: " + id);
             }
+
+            Cliente cliente = clienteRepository.findById(usuario.getCliente().getId());
+            if (cliente == null) {
+                throw new IllegalArgumentException("Cliente não encontrado com ID: " + usuario.getCliente().getId());
+            }
+            clienteRepository.delete(cliente);
             usuarioRepository.delete(usuario);
         } catch (Exception e) {
             System.err.println("Erro ao deletar usuário: " + e.getMessage());

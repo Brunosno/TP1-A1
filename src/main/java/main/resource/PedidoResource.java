@@ -12,8 +12,11 @@ import main.service.pedido.PedidoService;
 
 import org.jboss.logging.Logger;
 
+import io.quarkus.security.Authenticated;
+
 import java.util.List;
 
+@Authenticated
 @Path("/pedidos")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -48,7 +51,7 @@ public class PedidoResource {
     }
     
     @POST
-    @RolesAllowed({"Adm", "User"})
+    @RolesAllowed({"User"})
     public Response incluir(PedidoDTO dto) {
         LOG.infof("Incluindo novo pedido para usuario ID: %d", dto.idUsuario());
         PedidoResponseDTO pedido = pedidoService.create(dto);

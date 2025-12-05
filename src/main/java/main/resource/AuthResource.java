@@ -1,5 +1,6 @@
 package main.resource;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -17,6 +18,7 @@ import main.service.usuario.UsuarioService;
 import org.jboss.logging.Logger;
 
 @Path("auth")
+@PermitAll
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AuthResource {
@@ -49,10 +51,10 @@ public class AuthResource {
 
         if (usuario == null){ 
         LOG.warnf("Falha no login: usuário ou senha inválidos para %s", dto.username());
-          return Response.noContent().build();
-        }
+          return Response.status(404).build();
+            }
 
-        String token = jwtService.generateJwt(usuario.username(), usuario.perfil().name());
+        String token = jwtService.generateJwt(usuario.username(), usuario.perfil().getNome());
         LOG.infof("Login bem sucedido para usuário: %s", dto.username());
 
         return Response.ok().entity(usuario).header("Authorization", token).build();     

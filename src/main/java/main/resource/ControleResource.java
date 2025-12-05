@@ -63,6 +63,7 @@ public class ControleResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({"Adm", "User"})
     public Response buscarPorId(@PathParam("id") Long id) { 
         LOG.infof("Buscando controle com ID: %d", id);
         ControleResponseDTO controle = service.findById(id);
@@ -76,6 +77,7 @@ public class ControleResource {
 
     @POST
     @Path("/criar")
+    @RolesAllowed({"Adm"})
     @Transactional
     public Response criarComImagem(@BeanParam ControleForm dto) {
         try {
@@ -90,9 +92,9 @@ public class ControleResource {
         }
     }
 
-
     @PUT
     @Path("/{id}")
+    @RolesAllowed({"Adm"})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Transactional
     public Response alterar(@PathParam("id") Long id, @BeanParam ControleForm form) {
@@ -111,6 +113,7 @@ public class ControleResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({"Adm"})
     @Transactional
     public Response apagar(@PathParam("id") Long id) {
         LOG.infof("Apagando controle com ID: %d", id);

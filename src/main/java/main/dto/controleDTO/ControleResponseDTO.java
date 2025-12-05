@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import main.dto.plataformaDTO.PlataformaResponseDTO;
 import main.model.controle.Controle;
 import main.model.controle.Cor;
+import main.model.fabricante.Fabricante;
 import main.model.imagemControle.ImagemControle;
 import main.model.lote.Lote;
 
@@ -14,7 +15,7 @@ public record ControleResponseDTO(
     String nome,
     Double preco,
     Integer estoque,
-    String fabricante,
+    Fabricante fabricante,
     Cor cor,
     List<PlataformaResponseDTO> plataformas,
     String conexao,
@@ -31,7 +32,7 @@ public record ControleResponseDTO(
             controle.getNome(),
             controle.getPreco(),
             controle.getEstoque(),
-            controle.getFabricante() != null ? controle.getFabricante().getNome() : null,
+            controle.getFabricante(),
             controle.getCor(),
             controle.getPlataformas() != null
                 ? controle.getPlataformas().stream().map(PlataformaResponseDTO::valueOf).toList()

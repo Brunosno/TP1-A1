@@ -61,9 +61,17 @@ public class LoteServiceImpl implements LoteService {
     }
 
     @Override
-    public List<LoteResponseDTO> findAll() {
-        return loteRepository.listAll().stream()
+    public List<LoteResponseDTO> findAll(int page, int pageSize) {
+        return loteRepository.findAllPagination()
+                .page(page, pageSize)
+                .list()
+                .stream()
                 .map(LoteResponseDTO::valueOf)
-                .collect(Collectors.toList());
+                .toList();
+    }
+
+    @Override
+    public Long count() {
+        return loteRepository.count();
     }
 }

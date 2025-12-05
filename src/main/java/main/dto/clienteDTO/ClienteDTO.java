@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import main.dto.enderecoDTO.EnderecoDTO;
 import main.dto.telefoneDTO.TelefoneDTO;
 
 public record ClienteDTO(
@@ -25,7 +26,7 @@ public record ClienteDTO(
 
     TelefoneDTO telefone,
 
-    List<Long> idEnderecos
+    List<EnderecoDTO> enderecos
 ){
     
 }

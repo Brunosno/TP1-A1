@@ -10,5 +10,6 @@ public interface LoteService {
     LoteResponseDTO update(Long id, LoteDTO dto);
     void delete(Long id);
     LoteResponseDTO findById(Long id);
-    List<LoteResponseDTO> findAll();
+    List<LoteResponseDTO> findAll(int page, int pageSize);
+    Long count();
 }

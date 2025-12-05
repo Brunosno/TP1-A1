@@ -19,6 +19,9 @@ import main.dto.clienteDTO.ClienteResponseDTO;
 import main.service.cliente.ClienteService;
 import org.jboss.logging.Logger;
 
+import io.quarkus.security.Authenticated;
+
+@Authenticated
 @Path("clientes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

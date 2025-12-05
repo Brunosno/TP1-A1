@@ -14,7 +14,7 @@ public class ControleForm {
     public Long idFabricante;
 
     @RestForm
-    public List<Long> idsPlataformas;
+    public List<String> idsPlataformas;
 
     @RestForm
     public Integer idCor;
@@ -42,13 +42,12 @@ public class ControleForm {
 
     public ControleDTO toDTO() {
         List<Long> plataformas = idsPlataformas != null
-        ? idsPlataformas.stream()
-            .flatMap(s -> Arrays.stream(s.toString().split(",")))
-            .map(String::trim)
-            .filter(str -> !str.isEmpty())
-            .map(Long::valueOf)
-            .toList()
-        : null;
+                ? idsPlataformas.stream()
+                    .flatMap(s -> Arrays.stream(s.split(",")))
+                    .filter(x -> !x.isBlank())
+                    .map(Long::valueOf)
+                    .toList()
+                : null;
 
         return new ControleDTO(
             nome,

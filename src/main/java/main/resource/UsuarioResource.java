@@ -20,10 +20,12 @@ import java.util.List;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 
 import org.jboss.logging.Logger;
 
+@PermitAll
 @Path("usuarios")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -53,7 +55,7 @@ public class UsuarioResource {
 
     @GET
     @Path("/perfil")
-    //@RolesAllowed({"User", "Adm"})
+    @RolesAllowed({"User", "Adm"})
     public Response buscarUsuarioLogado() { 
 
         String username = jwt.getSubject();
@@ -69,7 +71,7 @@ public class UsuarioResource {
 
     @GET
     @Path("/{id}")
-    //@RolesAllowed({"Adm"})
+    @RolesAllowed({"User", "Adm"})
     public Response buscarPorId(@PathParam("id") Long id) {
         LOG.infof("Buscando usuário por ID: %d", id);
         UsuarioResponseDTO usuario = usuarioService.findById(id);
@@ -82,7 +84,7 @@ public class UsuarioResource {
     }
 
     @GET
-    //@RolesAllowed({"Adm"})
+    @RolesAllowed({"Adm"})
     public Response buscarTodos() {
         LOG.info("Buscando todos os usuários");
         List<UsuarioResponseDTO> usuarios = usuarioService.findAll();
@@ -92,14 +94,15 @@ public class UsuarioResource {
 
     @PUT
     @Path("/{id}")
-    //@RolesAllowed({"Adm"})
+    @RolesAllowed({"Adm", "User"})
     @Transactional
     public Response atualizar(@PathParam("id") Long id, UsuarioDTO dto) {
         LOG.infof("Atualizando usuário ID: %d", id);
         try {
             usuarioService.update(id, dto);
             LOG.debugf("Usuário atualizado com sucesso ID: %d", id);
-            return Response.noContent().build();
+            UsuarioResponseDTO usuario = usuarioService.findById(id);
+            return Response.ok().entity(usuario).build();
         } catch (Exception e) {
             LOG.errorf(e, "Erro ao atualizar usuário ID: %d", id);
             return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao atualizar usuário").build();
@@ -108,7 +111,7 @@ public class UsuarioResource {
 
     @DELETE
     @Path("/{id}")
-    //@RolesAllowed({"Adm"})
+    @RolesAllowed({"Adm", "User"})
     @Transactional
     public Response apagar(@PathParam("id") Long id) {
         LOG.infof("Deletando usuário ID: %d", id);
